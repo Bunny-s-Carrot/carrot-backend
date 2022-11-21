@@ -3,6 +3,7 @@ const app = express();
 const path = require("path");
 const mysql = require("mysql");
 const axios = require("axios");
+require("dotenv").config();
 
 //module import
 const auth = require("./middleware/auth");
@@ -10,8 +11,8 @@ const jwt = require("./auth/jwt_util");
 const redisClient = require("./auth/redis");
 
 //app listen
-app.listen(8080, () => {
-  console.log("listening on 8080");
+app.listen(process.env.DB_PORT, () => {
+  console.log("listening on 3306");
 });
 
 //app use
@@ -21,12 +22,12 @@ app.use(express.static(path.join(__dirname + "/react-app/build")));
 
 //db
 const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "carrotdb",
+  host: process.env.DB_HOSTNAME,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
 });
-/** 
+
 connection.connect((err)=>{
     if (err) {
     console.error('error connecting: ' + err.stack);
@@ -35,7 +36,7 @@ connection.connect((err)=>{
 
   console.log('connected as id ' + connection.threadId);
 });
-
+/**
 connection.query("INSERT INTO table value", function (error, results, fields) {
   if (error) {
     console.log(error);
