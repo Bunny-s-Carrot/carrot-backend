@@ -5,7 +5,7 @@ const path = require("path");
 require("dotenv").config();
 
 //app listen
-app.listen(process.env.DB_PORT, () => {
+app.listen(process.env.PORT, () => {
   console.log("listening on 3306");
 });
 
