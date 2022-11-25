@@ -11,7 +11,7 @@ const jwt = require("./auth/jwt_util");
 const redisClient = require("./auth/redis");
 
 //app listen
-app.listen(process.env.DB_PORT, () => {
+app.listen(process.env.PORT, () => {
   console.log("listening on 3306");
 });
 
