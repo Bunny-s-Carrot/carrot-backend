@@ -4,6 +4,14 @@ const path = require("path");
 const mysql = require("mysql");
 require("dotenv").config();
 
+
+app.get('/api', (req, res) => {
+  res.json({
+    success: 1,
+    message: "This is rest apis working"
+  })
+})
+
 //app listen
 app.listen(process.env.PORT, () => {
   console.log(`listening on ${process.env.PORT}`);
