@@ -20,7 +20,7 @@ class AuthController {
   
       return res.status(200).json({
         success: 1,
-        data: results,
+        payload: results,
       })
     })    
   }
@@ -34,7 +34,7 @@ class AuthController {
       if (!results) {
         return res.json({
           success: 0,
-          data: "Invalid email or password"
+          message: "Invalid email or password"
         });
       }
       const result = comparePassword(body.password, results.password);
@@ -51,7 +51,7 @@ class AuthController {
       } else {
         return res.json({
           success: 0,
-          data: "Invalid email or password"
+          message: "Invalid email or password"
         })
       }
     })
