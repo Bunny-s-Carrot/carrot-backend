@@ -1,5 +1,4 @@
 const UserService = require('./userService');
-const { hash, compare: comparePassword } = require('../../utils/password');
 
 class UserController {
   userService = new UserService();
