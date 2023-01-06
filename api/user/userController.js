@@ -10,7 +10,7 @@ class UserController {
       }
       return res.json({
         success: 1,
-        data: results,
+        payload: results,
       })
     })
   }
@@ -30,7 +30,7 @@ class UserController {
 
       return res.json({
         success: 1,
-        data: results,
+        payload: results,
       })
     })
   }
