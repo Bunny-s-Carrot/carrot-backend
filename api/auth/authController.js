@@ -1,7 +1,9 @@
 require("dotenv").config();
-const jwt = require('jsonwebtoken');
 const AuthService = require('./authService');
-const { hash: hashPassword, compare: comparePassword } = require('../../utils/password');
+const jwt = require('jsonwebtoken')
+const { hash: hashPassword, compare: comparePassword } = require('../../utils/auth/password');
+const { generateToken, refreshToken } = require('../../utils/auth/token')
+
 
 class AuthController {
   authService = new AuthService();
@@ -22,7 +24,7 @@ class AuthController {
         success: 1,
         payload: results,
       })
-    })    
+    })     
   }
 
   login = (req, res) => {
@@ -32,29 +34,66 @@ class AuthController {
         console.log(err);
       }
       if (!results) {
-        return res.json({
+        return res.status(403).json({
           success: 0,
           message: "Invalid email or password"
         });
       }
       const result = comparePassword(body.password, results.password);
       if (result) {
-        results.password = undefined;
-        const token = jwt.sign({ result: results }, process.env.JWT_SECRET_KEY, {
-          expiresIn: '1d'
-        });
-        return res.json({
+        
+        const accessToken = generateToken(results);
+        const refToken = refreshToken(results);
+
+        res.cookie('refresh_token', refToken, {
+          secure: false,
+          httpOnly: true,
+          maxAge: 30 * 24 * 60 * 60 * 1000
+        })
+        
+        return res.status(200).json({
           success: 1,
           message: "Login Successfully",
-          token,
+          token: accessToken,
         })
       } else {
-        return res.json({
+        return res.status(500).json({
           success: 0,
           message: "Invalid email or password"
         })
       }
     })
+  }
+
+  refreshToken = (req, res) => {
+    const cookies = req.cookies;
+    if (!cookies?.refresh_token) return res.status(401).json({ message: 'Unauthorized 여기야' })
+
+    const refreshToken = cookies.refresh_token;
+
+    jwt.verify(
+      refreshToken,
+      process.env.JWT_SECRET_KEY,
+      (err, decoded) => {
+        if (err) return res.status(403).json({ message: 'Forbidden' })
+        this.authService.findUserByEmail(decoded.email, (err, results) => {
+          if (err) return res.status(401).json({ message: 'Unauthorized'});
+
+          const accessToken = generateToken(decoded);
+          res.json({ accessToken });
+        })
+      
+      }
+    )
+  }
+
+  logout = (req, res) => {
+    const cookies = req.cookies;
+
+    if (!cookies?.refresh_token) return res.sendStatus(204);
+    
+    res.clearCookie('refresh_token')
+    res.json({ message: 'Cookie Cleared' })
   }
 }
 
