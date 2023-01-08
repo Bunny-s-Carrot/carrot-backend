@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const mainRouter = require('./routes');
 
 app.use(cors({
-  origin: '*',
+  origin: ['http://localhost:3000', 'https://bunnyscarrot.com'],
   credentials: true,
 }));
 app.use(cookieParser());
