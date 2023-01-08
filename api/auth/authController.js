@@ -44,7 +44,6 @@ class AuthController {
         
         const accessToken = generateToken(results);
         const refToken = refreshToken(results);
-
         res.cookie('refresh_token', refToken, {
           secure: false,
           httpOnly: true,
@@ -54,11 +53,6 @@ class AuthController {
         return res.status(200).json({
           success: 1,
           message: "Login Successfully",
-          userId: results.userId,
-          email: results.email,
-          name: results.name,
-          locatioin: results.location,
-          mannerTemp: results.mannerTemp,
           token: accessToken,
         })
       } else {
@@ -72,7 +66,8 @@ class AuthController {
 
   refreshToken = (req, res) => {
     const cookies = req.cookies;
-    if (!cookies?.refresh_token) return res.status(401).json({ message: 'Unauthorized 여기야' })
+
+    if (!cookies?.refresh_token) return res.status(401).json({ message: 'Unauthorized' })
 
     const refreshToken = cookies.refresh_token;
 
@@ -83,9 +78,11 @@ class AuthController {
         if (err) return res.status(403).json({ message: 'Forbidden' })
         this.authService.findUserByEmail(decoded.email, (err, results) => {
           if (err) return res.status(401).json({ message: 'Unauthorized'});
-
-          const accessToken = generateToken(decoded);
-          res.json({ accessToken });
+          console.log('decded:::', decoded);
+          const token = generateToken(decoded);
+          res.json({
+            token 
+          });
         })
       
       }
@@ -97,7 +94,7 @@ class AuthController {
 
     if (!cookies?.refresh_token) return res.sendStatus(204);
     
-    res.clearCookie('refresh_token')
+    res.clearCookie('refresh_token', {httpOnly: true, sameSite: 'none', secure: false })
     res.json({ message: 'Cookie Cleared' })
   }
 }
