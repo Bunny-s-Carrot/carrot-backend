@@ -1,19 +1,20 @@
 const jwt = require("jsonwebtoken");
 
 const generateToken = (payload) => {
+  console.log('generateToken', payload);
   const accessToken = jwt.sign(
     {
-      userId: payload.user_id,
+      user_id: payload.user_id,
       email: payload.email,
       name: payload.name,
       location: payload.location,
-      mannerTemp: payload.manner_temp,
-      createdAt: payload.created_at,
-      updatedAt: payload.updated_at,
+      manner_temp: payload.manner_temp,
+      created_at: payload.created_at,
+      updated_at: payload.updated_at,
     }, 
     process.env.JWT_SECRET_KEY, 
     {
-    expiresIn: '15m'
+    expiresIn: '10s'
     }
   );
 
@@ -21,15 +22,16 @@ const generateToken = (payload) => {
 }
 
 const refreshToken = (payload) => {
+
   const refreshToken = jwt.sign(
     {
-      userId: payload.user_id,
+      user_id: payload.user_id,
       email: payload.email,
       name: payload.name,
       location: payload.location,
-      mannerTemp: payload.manner_temp,
-      createdAt: payload.created_at,
-      updatedAt: payload.updated_at,
+      manner_temp: payload.manner_temp,
+      created_at: payload.created_at,
+      updated_at: payload.updated_at,
     }, 
     process.env.JWT_SECRET_KEY, 
     {
