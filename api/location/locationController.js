@@ -8,7 +8,7 @@ class LocationController {
       if (err) {
         throw Error(err);
       }
-      return res.json({
+      return res.status(200).json({
         success: 1,
         payload: results,
       })
