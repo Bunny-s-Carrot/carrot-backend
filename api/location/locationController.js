@@ -1,19 +1,23 @@
-const LocationService = require('./locationService');
+const locationService = require('./locationService');
 
-class LocationController {
-  locationService = new LocationService();
+const getLocations = async (req, res) => {
+  const results = await locationService.getLocations();
 
-  getLocations = (req, res) => {
-    this.locationService.getLocations((err, results) => {
-      if (err) {
-        throw Error(err);
-      }
-      return res.json({
-        success: 1,
-        payload: results,
-      })
+  if (results.length === 0) {
+    return res.ststus(404).json({
+      success: 0,
+      message: 'Locations Not Found'
     })
   }
+    
+  return res.status(200).json({
+    success: 1,
+    payload: results,
+  })
 }
 
-module.exports = LocationController;
+const locationController = {
+  getLocations,
+}
+
+module.exports = locationController 
