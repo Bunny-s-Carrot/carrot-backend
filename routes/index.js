@@ -9,7 +9,7 @@ router.use('/auth', authRoutes);
 router.use('/user', userRoutes);
 router.use('/location', locationRoutes);
 router.use('/neighbor',neighborRoutes);
-router.use('/home', productRoutes)
+router.use('/product', productRoutes)
 
 
 module.exports = router;
