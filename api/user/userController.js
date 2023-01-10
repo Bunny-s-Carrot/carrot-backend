@@ -1,69 +1,72 @@
-const UserService = require('./userService');
+const userService = require('./userService');
 
-class UserController {
-  userService = new UserService();
+const getUsers = async (req, res) => {
+  const results = await userService.getUsers();
 
-  getUsers = (req, res) => {
-    this.userService.getUsers((err, results) => {
-      if (err) {
-        throw Error(err);
-      }
-      return res.json({
-        success: 1,
-        payload: results,
-      })
+  if (results.length === 0) {
+    return res.status(404).json({
+      success: 0,
+      message: 'Users Not Found'
     })
   }
 
-  getUserById = (req, res) => {
-    const user_id = req.params.user_id;
-    this.userService.getUserById(user_id, (err, results) => {
-      if (err) {
-        throw Error(err);
-      }
-      if (!results) {
-        return res.json({
-          success: 0,
-          message: "Record not Found",
-        })
-      }
+  return res.json({
+    success: 1,
+    payload: results,
+  })
+}
 
-      return res.json({
-        success: 1,
-        payload: results,
-      })
+const getUserById = async (req, res) => {
+  const user_id = req.params.user_id;
+  const result = await userService.getUserById(user_id)
+  if (result === undefined) {
+    return res.status(404).json({
+      success: 0,
+      message: "User not Found",
     })
   }
 
-  updateUser = (req, res) => {
-    const body = req.body;
-    const id = parseInt(req.params.user_id);
-    if (body.password) { body.password = hash(body.password); }
-    this.userService.updateUser({ body, id } , (err, results) => {
-      if (err) {
-        throw Error(err);
-      }
-      return res.json({
-        success: 1,
-        message: "Updated Successfully",
-      })
-    })
-  }
-
-  withdraw = (req, res) => {
-    const id = req.params.user_id;
-    this.userService.withdraw(id, (err, results) => {
-      if (err) {
-        throw Error(err);
-      }
-      
-      return res.json({
-        success: 1,
-        message: "User Deleted Successfully"
-      });
-    });
-  }
+  return res.status(200).json({
+    success: 1,
+    payload: result,
+  })
 }
 
 
-module.exports = UserController;
+const updateUser = (req, res) => {
+  const body = req.body;
+  const id = parseInt(req.params.user_id);
+  if (body.password) { body.password = hash(body.password); }
+  this.userService.updateUser({ body, id } , (err) => {
+    if (err) {
+      throw Error(err);
+    }
+    return res.json({
+      success: 1,
+      message: "Updated Successfully",
+    })
+  })
+}
+
+const withdraw = (req, res) => {
+  const id = req.params.user_id;
+  userService.withdraw(id, (err) => {
+    if (err) {
+      throw Error(err);
+    }
+      
+    return res.json({
+      success: 1,
+      message: "Deleted Successfully"
+    });
+  });
+}
+
+const userController = {
+  getUsers,
+  getUserById,
+  updateUser,
+  withdraw,
+}
+
+module.exports = userController;

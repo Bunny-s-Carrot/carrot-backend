@@ -1,25 +1,25 @@
 const pool = require('../../config/database');
-
-class NeighborService {
     
-  getPosts = callBack => {
-		pool.query(
-			`select * from NEIGHBORHOOD;`,
-			(err, results, fields) => {
-				if (err) {
-					console.log('error');
-				}
+const getPosts = async () => {
+  try {
+	  const posts = await pool.query(
+		`select * from NEIGHBORHOOD;`,
+	  )
 
-				return callBack(null, results);
-			}
-		)
+    return posts[0];
+  } catch(e) {
+    throw Error(e);
   }
-
-	// getUserbyWriterId = callBack => {
-	// 	pool.query(
-	// 		``
-	// 	)
-	// }
 }
 
-module.exports = NeighborService;
+// const getUserbyWriterId = callBack => {
+// 	pool.query(
+// 		``
+// 	)
+// }
+
+const neighborService = {
+  getPosts,
+}
+
+module.exports = neighborService
