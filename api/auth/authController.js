@@ -78,7 +78,7 @@ class AuthController {
         if (err) return res.status(403).json({ message: 'Forbidden' })
         this.authService.findUserByEmail(decoded.email, (err, results) => {
           if (err) return res.status(401).json({ message: 'Unauthorized'});
-          console.log('decded:::', decoded);
+
           const token = generateToken(decoded);
           res.json({
             token 

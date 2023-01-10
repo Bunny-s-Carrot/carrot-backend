@@ -10,7 +10,7 @@ class AuthService {
         data.email,
         data.password,
         data.name,
-        data.locationHCode,
+        data.locationId,
       ],
       (err, results, fields) => {
         if (err) {
