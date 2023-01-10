@@ -1,20 +1,20 @@
 const pool = require('../../config/database');
 
-class LocationService {
-
-  getLocations = callBack => {
-    pool.query(
+const getLocations = async () => {
+  try {
+    const locations = await pool.query(
       `select * from LOCATION`,
-      [],
-      (err, results, fields) => {
-        if (err) {
-          return callBack(err);
-        }
-  
-        return  callBack(null, results);
-      }
     )
+
+    return locations
+  } catch (e) {
+    throw Error(e);
   }
+  
 }
 
-module.exports = LocationService;
+const locationService = {
+  getLocations,
+}
+
+module.exports = locationService
