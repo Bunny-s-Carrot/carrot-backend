@@ -1,4 +1,4 @@
-const NeighborController = require('./neighrborController');
+const NeighborController = require('./neighborController');
 const router = require('express').Router();
 
 const neighborController = new NeighborController();
