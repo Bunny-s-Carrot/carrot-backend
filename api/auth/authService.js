@@ -21,7 +21,7 @@ const signup = (data, callBack) => {
   )
 }
 
-const findUserByEmail = async (email, callBack) => {
+const findUserByEmail = async (email) => {
   try {
     const user = await pool.query(
       `select * from USER where email = ?`,
