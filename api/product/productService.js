@@ -3,7 +3,9 @@ const pool = require('../../config/database');
 const getProducts = async () => {
   try {
     const products = await pool.execute(
-      `select * from PRODUCT`,
+      `select PRODUCT.*, LOCATION.lowest_sect_name from PRODUCT 
+      left join LOCATION 
+      on PRODUCT.seller_location = LOCATION.location_id`,
     )
     return products[0];
   } catch (e) {

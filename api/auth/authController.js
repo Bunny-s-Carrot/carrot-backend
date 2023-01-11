@@ -36,8 +36,8 @@ const login = async (req, res) => {
     });
   }
   
-  const passwordCorrent = comparePassword(body.password, result.password);
-  if (passwordCorrent) {
+  const passwordCorrect = comparePassword(body.password, result.password);
+  if (passwordCorrect) {
         
     const accessToken = generateToken(result);
     const refToken = generateRefToken(result);
@@ -71,20 +71,17 @@ const refreshToken = (req, res) => {
   jwt.verify(
     refreshToken,
     process.env.JWT_SECRET_KEY,
-    (err, decoded) => {
-      if (err) return res.status(403).json({ message: 'Forbidden' })
-      authService.findUserByEmail(decoded.email, (err, results) => {
-        if (err) return res.status(401).json({ message: 'Unauthorized'});
-
-        const token = generateToken(decoded);
-        res.json({
-          token 
-        });
-      })
-      
+    async (err, decoded) => {
+      if (err) return res.status(401).json({ message: 'Unauthorized' });
+    
+      const token = generateToken(decoded);
+      res.json({
+        token 
+      });
     }
   )
 }
+  
 
 const logout = (req, res) => {
   const cookies = req.cookies;
