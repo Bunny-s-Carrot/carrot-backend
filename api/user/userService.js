@@ -13,11 +13,11 @@ const getUsers = async () => {
   
 }
 
-const getUserById = async (id) => {
+const getUserById = async (user_id) => {
   try {
     const userDetail = await pool.query(
       `select user_id, email, name, location, manner_temp from USER where user_id = ?`,
-      [id],   
+      [user_id],   
     )
     return userDetail[0][0];
     
@@ -26,7 +26,20 @@ const getUserById = async (id) => {
   }
   
 }
-  
+
+const getLocationById = async (user_id) => {
+  try {
+    const locationId = await pool.query(
+      `select location from USER where user_id = ?`,
+      [user_id]
+    )
+    console.log(locationId[0])
+    return locationId[0][0];
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
 const updateUser = (data, callBack) => {
   pool.query(
     `update USER set password=?, name=?, location=?, manner_temp=? where user_id = ?`,
@@ -64,6 +77,7 @@ const withdraw = (id, callBack) => {
 const userService = {
   getUsers,
   getUserById,
+  getLocationById,
   updateUser,
   withdraw,
 }
