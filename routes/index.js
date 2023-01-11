@@ -8,7 +8,7 @@ const productRoutes = require('../api/product/productRoutes');
 router.use('/auth', authRoutes);
 router.use('/user', userRoutes);
 router.use('/location', locationRoutes);
-router.use('/neighbor',neighborRoutes);
+router.use('/post',neighborRoutes);
 router.use('/product', productRoutes)
 
 
