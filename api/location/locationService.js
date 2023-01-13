@@ -6,7 +6,7 @@ const getLocations = async () => {
       `select * from LOCATION`,
     )
 
-    return locations
+    return locations[0]
   } catch (e) {
     throw Error(e);
   }
