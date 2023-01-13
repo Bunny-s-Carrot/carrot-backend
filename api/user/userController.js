@@ -1,72 +1,69 @@
-const userService = require('./userService');
+const UserService = require('./userService');
 
-const getUsers = async (req, res) => {
-  const results = await userService.getUsers();
+class UserController {
+  userService = new UserService();
 
-  if (results.length === 0) {
-    return res.status(404).json({
-      success: 0,
-      message: 'Users Not Found'
+  getUsers = (req, res) => {
+    this.userService.getUsers((err, results) => {
+      if (err) {
+        throw Error(err);
+      }
+      return res.json({
+        success: 1,
+        payload: results,
+      })
     })
   }
 
-  return res.json({
-    success: 1,
-    payload: results,
-  })
-}
+  getUserById = (req, res) => {
+    const user_id = req.params.user_id;
+    this.userService.getUserById(user_id, (err, results) => {
+      if (err) {
+        throw Error(err);
+      }
+      if (!results) {
+        return res.json({
+          success: 0,
+          message: "Record not Found",
+        })
+      }
 
-const getUserById = async (req, res) => {
-  const user_id = req.params.user_id;
-  const result = await userService.getUserById(user_id)
-  if (result === undefined) {
-    return res.status(404).json({
-      success: 0,
-      message: "User not Found",
+      return res.json({
+        success: 1,
+        payload: results,
+      })
     })
   }
 
-  return res.status(200).json({
-    success: 1,
-    payload: result,
-  })
-}
-
-
-const updateUser = (req, res) => {
-  const body = req.body;
-  const id = parseInt(req.params.user_id);
-  if (body.password) { body.password = hash(body.password); }
-  this.userService.updateUser({ body, id } , (err) => {
-    if (err) {
-      throw Error(err);
-    }
-    return res.json({
-      success: 1,
-      message: "Updated Successfully",
+  updateUser = (req, res) => {
+    const body = req.body;
+    const id = parseInt(req.params.user_id);
+    if (body.password) { body.password = hash(body.password); }
+    this.userService.updateUser({ body, id } , (err, results) => {
+      if (err) {
+        throw Error(err);
+      }
+      return res.json({
+        success: 1,
+        message: "Updated Successfully",
+      })
     })
-  })
-}
+  }
 
-const withdraw = (req, res) => {
-  const id = req.params.user_id;
-  userService.withdraw(id, (err) => {
-    if (err) {
-      throw Error(err);
-    }
+  withdraw = (req, res) => {
+    const id = req.params.user_id;
+    this.userService.withdraw(id, (err, results) => {
+      if (err) {
+        throw Error(err);
+      }
       
-    return res.json({
-      success: 1,
-      message: "Deleted Successfully"
+      return res.json({
+        success: 1,
+        message: "User Deleted Successfully"
+      });
     });
-  });
+  }
 }
 
-const userController = {
-  getUsers,
-  getUserById,
-  updateUser,
-  withdraw,
-}
 
-module.exports = userController;
+module.exports = UserController;
