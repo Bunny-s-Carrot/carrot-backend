@@ -24,7 +24,7 @@ const signup = (data, callBack) => {
 const findUserByEmail = async (email) => {
   try {
     const user = await pool.query(
-      `select * from USER where email = ?`,
+      `select USER.user_id, USER.password, USER.name, USER.email, USER.location, USER.manner_temp, LOCATION.x_coord, LOCATION.y_coord from USER left join LOCATION on USER.location = LOCATION.location_id where email = ?`,
       [email],
     )
 
