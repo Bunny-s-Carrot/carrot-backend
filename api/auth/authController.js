@@ -27,7 +27,7 @@ const signup = (req, res) => {
 
 const login = async (req, res) => {
   const body = req.body;
-  const result = await authService.findUserByEmail(body.email)
+  const result = await authService.findUserByEmail(body.email);
 
   if (result === undefined) {
     return res.status(403).json({

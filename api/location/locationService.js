@@ -2,11 +2,11 @@ const pool = require('../../config/database');
 
 const getLocations = async () => {
   try {
-    const locations = await pool.query(
+    const data = await pool.query(
       `select * from LOCATION`,
     )
 
-    return locations
+    return data[0]
   } catch (e) {
     throw Error(e);
   }
@@ -14,12 +14,23 @@ const getLocations = async () => {
 
 const getLocationById = async (location_id) => {
   try {
-    const location = await pool.query(
+    const data = await pool.query(
       `select * from LOCATION where location_id = ?`,
       [location_id],
     )
-    console.log(location[0][0]);
-    return location[0][0];
+    return data[0][0];
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+const getCoordsById = async (location_id) => {
+  try {
+    const data = await pool.query(
+      `select x_coord, y_coord from LOCATION where location_id = ?`,
+      [location_id],
+    )
+    return data[0][0]
   } catch (e) {
     throw Error(e);
   }
@@ -28,6 +39,7 @@ const getLocationById = async (location_id) => {
 const locationService = {
   getLocations,
   getLocationById,
+  getCoordsById,
 }
 
 module.exports = locationService
