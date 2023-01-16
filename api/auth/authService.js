@@ -1,8 +1,8 @@
-const e = require('express');
 const pool = require('../../config/database');
 
-const signup = (data, callBack) => {
-  pool.query(
+const signup = async (data, callBack) => {
+  try {
+    const result = await pool.query(
     `insert into USER(email, password, name, location)
     values(?, ?, ?, ?)`,
     [
@@ -11,14 +11,14 @@ const signup = (data, callBack) => {
       data.name,
       data.locationId,
     ],
-    (err, results, fields) => {
-      if (err) {
-        return callBack(err);
-      }
-  
-      return callBack(null, results[0]);
-    }
-  )
+    )
+
+    return result[0];
+  } catch (e) {
+    throw Error(e);
+  }
+
+
 }
 
 const findUserByEmail = async (email) => {

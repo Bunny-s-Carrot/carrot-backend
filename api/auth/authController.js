@@ -2,28 +2,41 @@ require("dotenv").config();
 const authService = require('./authService');
 const jwt = require('jsonwebtoken')
 const { hash: hashPassword, compare: comparePassword } = require('../../utils/auth/password');
-const { generateToken, refreshToken: generateRefToken } = require('../../utils/auth/token')
+const { generateToken, refreshToken: generateRefToken } = require('../../utils/auth/token');
+const locationService = require("../location/locationService");
 
 
-const signup = (req, res) => {
-  const body = req.body;
-  body.password = hashPassword(body.password);
-  authService.signup(body, (err, results) => {
-    if (err) {
-      console.log(err);
-      
-      return res.status(500).json({
-        success: 0,
-        message: "Database Connection Error"
-        });
-      }
+const signup = async (req, res) => {
+  const body = req.body
   
-    return res.status(200).json({
-      success: 1,
-      payload: results,
+  const user = await authService.findUserByEmail(body.email);
+  console.log(user);
+  if (user) {
+    return res.json({
+      success: 0,
+      message: "Duplicate Email",
     })
-  })     
-}
+  }
+  body.password = hashPassword(body.password);
+  await authService.signup(body);
+
+  const result = await authService.findUserByEmail(body.email);
+  const accessToken = generateToken(result);
+  const refToken = generateRefToken(result);
+
+  res.cookie('refresh_token', refToken, {
+    secure: false,
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000
+  })
+  
+  return res.status(200).json({
+    success: 1,
+    message: "Signup Successful",
+    token: accessToken
+  })
+}  
+
 
 const login = async (req, res) => {
   const body = req.body;
@@ -35,7 +48,7 @@ const login = async (req, res) => {
       message: "Invalid email or password"
     });
   }
-  
+  const locationData = await locationService.getLocationById(result.location);
   const passwordCorrect = comparePassword(body.password, result.password);
   if (passwordCorrect) {
         
@@ -47,10 +60,11 @@ const login = async (req, res) => {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000
     })
-        
+      
     return res.status(200).json({
       success: 1,
       message: "Login Successfully",
+      locationData,
       token: accessToken,
     })
   } else {
