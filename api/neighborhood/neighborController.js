@@ -1,3 +1,4 @@
+const userService = require('../user/userService');
 const neighborService = require('./neighborService');
 
 const getPosts = async (req, res) => {
@@ -18,8 +19,9 @@ const getPosts = async (req, res) => {
 const getPostDetail = async (req, res) => {
   const postId = req.params.post_id;
   const postInfo = await neighborService.getPostById(postId);
+  const userInfo = await userService.getUserById(postInfo?.writer_id);
 
-  const result = {post: postInfo};
+  const result = {user: userInfo, post: postInfo};
 
   if (postInfo === undefined) {
     return res.status(404).json({
