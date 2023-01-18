@@ -37,9 +37,20 @@ const getProductDetail = async (req, res) => {
   })
 }
 
+const createProduct = async (req, res) => {
+  const body = req.body;
+  await productService.createProduct(body);
+
+  return res.status(200).json({
+    success: 1,
+    message: "Created Product Successfully"
+  })
+}
+
 const productController = {
   getProducts,
   getProductDetail,
+  createProduct,
 }
 
 module.exports = productController
