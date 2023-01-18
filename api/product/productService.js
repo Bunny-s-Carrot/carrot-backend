@@ -26,7 +26,16 @@ const getProductById = async (productId) => {
 }
 
 const createProduct = async (data) => {
+  try {
+    const result = await pool.query(
+      `insert into PRODUCT(seller_id, seller_location, title, price, contents, wanted_location, price_suggest, share, classif_id)
+      values(?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    )
 
+    return result[0]
+  } catch (e) {
+    throw Error(e);
+  }
 }
 
 const productService = {

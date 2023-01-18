@@ -10,7 +10,7 @@ const signup = async (req, res) => {
   const body = req.body
   
   const user = await authService.findUserByEmail(body.email);
-  console.log(user);
+
   if (user) {
     return res.json({
       success: 0,

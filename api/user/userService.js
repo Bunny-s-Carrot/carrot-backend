@@ -31,14 +31,90 @@ const getUserById = async (user_id) => {
 
 const getLocationById = async (user_id) => {
   try {
-    const locationId = await pool.query(
-      `select location from USER where user_id = ?`,
+    const result = await pool.query(
+      `select location, location2, active_location from USER where user_id = ?`,
       [user_id]
     )
-    console.log(locationId[0])
-    return locationId[0][0];
+
+    return result[0][0];
   } catch (e) {
     throw Error(e);
+  }
+}
+
+const updateLocation = async (data) => {
+  try {
+    const result = await pool.query(
+      `update USER set location=? where user_id = ?`,
+      [
+        data.body.location,
+        data.user_id
+      ]
+    );
+
+    return result[0];
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+const deleteLocation = async (user_id) => {
+  try {
+    const result = await pool.query(
+      `update USER set location=NULL where user_id = ?`,
+      [
+        user_id
+      ]
+    )
+
+    return result[0]
+  } catch (e) {
+    throw Error(e)
+  }
+}
+
+const updateLocation2 = async (data) => {
+  try {
+    const result = await pool.query(
+      `update USER set location2=? where user_id = ?`,
+      [
+        data.body.location,
+        data.user_id
+      ]
+    );
+
+    return result[0];
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+const deleteLocation2 = async (user_id) => {
+  try {
+    const result = await pool.query(
+      `update USER set location2=NULL where user_id = ?`,
+      [
+        user_id
+      ]
+    )
+
+    return result[0]
+  } catch (e) {
+    throw Error(e)
+  }
+}
+
+const updateActiveLocation = async (data) => {
+  try {
+    await pool.query(
+      `update USER set active_location=? where user_id = ?`,
+      [
+        data.active_location,
+        data.user_id,
+      ]
+    )
+  } catch (e) {
+    throw Error(e)
   }
 }
 
@@ -82,6 +158,11 @@ const userService = {
   getLocationById,
   updateUser,
   withdraw,
+  updateLocation,
+  deleteLocation,
+  updateLocation2,
+  deleteLocation2,
+  updateActiveLocation,
 }
 
 
