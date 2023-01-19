@@ -29,7 +29,18 @@ const createProduct = async (data) => {
   try {
     const result = await pool.query(
       `insert into PRODUCT(seller_id, seller_location, title, price, contents, wanted_location, price_suggest, share, classif_id)
-      values(?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      values(?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        data.seller_id,
+        data.seller_location,
+        data.title,
+        data.price,
+        data.contents,
+        data.wanted_location,
+        data.price_suggest,
+        data.share,
+        data.classif_id
+      ]
     )
 
     return result[0]

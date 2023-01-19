@@ -3,6 +3,7 @@ const authService = require('./authService');
 const jwt = require('jsonwebtoken')
 const { hash: hashPassword, compare: comparePassword } = require('../../utils/auth/password');
 const { generateToken, refreshToken: generateRefToken } = require('../../utils/auth/token');
+const userService = require("../user/userService");
 const locationService = require("../location/locationService");
 
 
@@ -48,7 +49,13 @@ const login = async (req, res) => {
       message: "Invalid email or password"
     });
   }
-  const locationData = await locationService.getLocationById(result.location);
+  const locationData = await userService.getLocationById(result.user_id);
+  const locationName = await locationService.getLocationNameById(locationData.location);
+  const locationName2 = locationData.location2 && await locationService.getLocationNameById(locationData.location2);
+  
+  locationData['location_name'] = locationName?.lowest_sect_name
+  locationData['location_name2'] = locationName2?.lowest_sect_name
+  
   const passwordCorrect = comparePassword(body.password, result.password);
   if (passwordCorrect) {
         
