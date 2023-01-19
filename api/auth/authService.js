@@ -3,14 +3,14 @@ const pool = require('../../config/database');
 const signup = async (data, callBack) => {
   try {
     const result = await pool.query(
-    `insert into USER(email, password, name, location)
-    values(?, ?, ?, ?)`,
-    [
-      data.email,
-      data.password,
-      data.name,
-      data.locationId,
-    ],
+      `insert into USER(email, password, name, location)
+      values(?, ?, ?, ?)`,
+      [
+        data.email,
+        data.password,
+        data.name,
+        data.locationId,
+      ],
     )
 
     return result[0];
