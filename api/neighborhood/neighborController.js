@@ -36,10 +36,9 @@ const getPostDetail = async (req, res) => {
   })
 }
 
-
 const neighborController = {
   getPosts,
-  getPostDetail
+  getPostDetail,
 }
 
 module.exports = neighborController

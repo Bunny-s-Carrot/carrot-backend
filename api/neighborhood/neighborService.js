@@ -6,7 +6,8 @@ const getPosts = async () => {
 		`select NEIGHBORHOOD.*, lowest_sect_name, category_name from NEIGHBORHOOD 
     inner join USER on writer_id = user_id 
     inner join LOCATION on location = location_id
-    inner join POSTCATEGORY on category_id = classif_id;`,
+    inner join POSTCATEGORY on category_id = classif_id
+    order by post_id desc;`,
 	  )
 
     return posts[0];
@@ -28,6 +29,7 @@ const getPostById = async (postId) => {
     throw Error(e);
   }
 }
+
 
 const neighborService = {
   getPosts,
