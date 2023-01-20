@@ -6,7 +6,8 @@ const getPosts = async () => {
 		`select NEIGHBORHOOD.*, lowest_sect_name, category_name from NEIGHBORHOOD 
     inner join USER on writer_id = user_id 
     inner join LOCATION on location = location_id
-    inner join POSTCATEGORY on category_id = classif_id;`,
+    inner join POSTCATEGORY on category_id = classif_id
+    order by post_id desc;`,
 	  )
 
     return posts[0];
@@ -29,9 +30,30 @@ const getPostById = async (postId) => {
   }
 }
 
-const neighborService = {
-  getPosts,
-  getPostById,
+const createPost = async (data) => {
+    try {
+      const index = data.content.indexOf('\n');
+      const title = data.content.slice(0,index)
+
+      const result = await pool.query(`
+      insert into NEIGHBORHOOD(writer_id, classif_id, title, content)
+      values(13, 2003, ?, ?)`,
+      [
+        title,
+        data.content
+      ],
+    )
+
+    // return result[0];
+} catch (e) {
+    throw Error(e);
+}
 }
 
-module.exports = neighborService
+const postService = {
+  getPosts,
+  getPostById,
+  createPost
+}
+
+module.exports = postService

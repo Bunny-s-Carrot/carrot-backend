@@ -1,8 +1,8 @@
 const userService = require('../user/userService');
-const neighborService = require('./neighborService');
+const postService = require('./postService');
 
 const getPosts = async (req, res) => {
-	const results = await neighborService.getPosts();
+	const results = await postService.getPosts();
 
   if (results.length === 0) {
     return res.status(404).json({
@@ -18,7 +18,7 @@ const getPosts = async (req, res) => {
 
 const getPostDetail = async (req, res) => {
   const postId = req.params.post_id;
-  const postInfo = await neighborService.getPostById(postId);
+  const postInfo = await postService.getPostById(postId);
   const userInfo = await userService.getUserById(postInfo?.writer_id);
 
   const result = {user: userInfo, post: postInfo};
@@ -36,11 +36,21 @@ const getPostDetail = async (req, res) => {
   })
 }
 
+const createPost = async (req, res) => {
+  const body = req.body
+  console.log(body)
+  await postService.createPost(body);
 
-const neighborController = {
+  return res.json({
+    message: "Writed Post Successfully"
+  });
+};
+
+const postController = {
   getPosts,
-  getPostDetail
+  getPostDetail,
+  createPost
 }
 
-module.exports = neighborController
+module.exports = postController
 
