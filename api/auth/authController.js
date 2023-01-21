@@ -19,7 +19,13 @@ const signup = async (req, res) => {
     })
   }
   body.password = hashPassword(body.password);
-  await authService.signup(body);
+  const signupResult = await authService.signup(body);
+  
+  if (signupResult.errno === 1452) {
+    return res.status(500).json({
+      code: signupResult.code
+    })
+  }
 
   const result = await authService.findUserByEmail(body.email);
   const accessToken = generateToken(result);
