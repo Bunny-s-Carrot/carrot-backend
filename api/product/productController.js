@@ -1,5 +1,7 @@
+const multer = require('multer');
 const userService = require('../user/userService');
 const productService = require('./productService');
+const b2 = require("../../utils/backBlaze/b2");
 
 const getProducts = async (req, res) => {
   const results = await productService.getProducts();
@@ -39,11 +41,35 @@ const getProductDetail = async (req, res) => {
 
 const createProduct = async (req, res) => {
   const body = req.body;
-  await productService.createProduct(body);
+  const result = await productService.createProduct(body);
 
   return res.status(200).json({
     success: 1,
+    product_id: result.insertId,
     message: "Created Product Successfully"
+  })
+}
+
+const uploadImages = async (req, res, err) => {
+
+  if (err instanceof multer.MulterError) {
+    return res.sendStatus(INTERNAL_SERVER_ERROR_STATUS);
+  }
+  const files = req.files;
+  const productId = req.body.payload.data.product_id;
+
+  try {
+    for (let i = 0; i < files.length; i++) {
+      const fileName = `product/${productId}/${i}.${files[i].originalname.split('.').at(-1)}`
+      await b2.uploadFiles(fileName, files[i].buffer);
+    }
+  } catch (e) {
+    throw Error(e);
+  }
+  
+  
+  return res.json({
+    message: "File Uploaded Successfully"
   })
 }
 
@@ -51,6 +77,7 @@ const productController = {
   getProducts,
   getProductDetail,
   createProduct,
+  uploadImages,
 }
 
 module.exports = productController
