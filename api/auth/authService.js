@@ -15,7 +15,7 @@ const signup = async (data, callBack) => {
 
     return result[0];
   } catch (e) {
-    throw Error(e);
+    return e;
   }
 
 
