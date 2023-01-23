@@ -7,7 +7,7 @@ const multer = require('multer')
 const mainRouter = require('./routes');
 
 app.use(cors({
-  origin: ['https://app.bunnyscarrot.com', 'http://localhost:3000'],
+  origin: ['https://app.bunnyscarrot.com', 'http://localhost:3000', 'http://192.168.1.103:3000'],
   credentials: true,
 }));
 
