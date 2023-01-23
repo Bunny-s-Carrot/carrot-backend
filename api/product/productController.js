@@ -23,7 +23,6 @@ const getProducts = async (req, res) => {
 }
 
 const getProductDetail = async (req, res) => {
-  window.OpenMap.postMessage("hihislgl;alsdkjfaskdfjsldkf;");
   const productId = req.params.product_id;
   const productInfo = await productService.getProductById(productId);
   const userInfo = await userService.getUserById(productInfo?.seller_id);
