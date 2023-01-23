@@ -26,9 +26,32 @@ const uploadFiles = async (fileName, data) => {
   }
 }
 
+const getFileList = async (category, productId) => {
+  try {
+    await b2.authorize();
+    const result = await b2.listFileNames({
+      bucketId: process.env.BACKBLAZE_BUCKET_ID,
+      prefix: `${category}/${productId}`
+    })
+
+    const files = result.data?.files;
+    const array = [];
+    const data = { length: files.length, names: []};
+    
+    for (i = 0; i < files.length; i++) {
+      array.push(files[i].fileName)
+    }
+    data.names = array;
+
+    return data;
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
 const backBlaze = {
   uploadFiles,
+  getFileList,
 }
 
 module.exports = backBlaze;
-

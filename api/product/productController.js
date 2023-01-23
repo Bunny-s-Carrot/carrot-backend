@@ -51,7 +51,6 @@ const createProduct = async (req, res) => {
 }
 
 const uploadImages = async (req, res, err) => {
-
   if (err instanceof multer.MulterError) {
     return res.sendStatus(INTERNAL_SERVER_ERROR_STATUS);
   }
@@ -67,17 +66,32 @@ const uploadImages = async (req, res, err) => {
     throw Error(e);
   }
   
-  
   return res.json({
     message: "File Uploaded Successfully"
   })
 }
+
+const getImageList = async (req, res, err) => {
+  if (err instanceof multer.MulterError) {
+    return res.sendStatus(INTERNAL_SERVER_ERROR_STATUS);
+  }
+
+  const productId = req.params.product_id;
+
+  const result = await b2.getFileList('product', productId);
+
+  return res.status(200).json({
+    payload: result
+  });
+}
+
 
 const productController = {
   getProducts,
   getProductDetail,
   createProduct,
   uploadImages,
+  getImageList,
 }
 
 module.exports = productController
