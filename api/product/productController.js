@@ -2,8 +2,11 @@ const multer = require('multer');
 const userService = require('../user/userService');
 const productService = require('./productService');
 const b2 = require("../../utils/backBlaze/b2");
+const { convertToJPG } = require('../../utils/file/extension')
+
 
 const getProducts = async (req, res) => {
+
   const results = await productService.getProducts();
 
   if(results.length === 0) {
@@ -59,8 +62,10 @@ const uploadImages = async (req, res, err) => {
 
   try {
     for (let i = 0; i < files.length; i++) {
-      const fileName = `product/${productId}/${i}.${files[i].originalname.split('.').at(-1)}`
-      await b2.uploadFiles(fileName, files[i].buffer);
+      const buffer = await convertToJPG(files[i].buffer);
+
+      const fileName = `product/${productId}/${i}.jpg`
+      await b2.uploadFiles(fileName, buffer);
     }
   } catch (e) {
     throw Error(e);
@@ -85,6 +90,20 @@ const getImageList = async (req, res, err) => {
   });
 }
 
+const getThumbnail = async (req, res, err) => {
+  if (err instanceof multer.MulterError) {
+    return res.sendStatus(INTERNAL_SERVER_ERROR_STATUS);
+  }
+  const productId = req.params.product_id;
+
+  const result = await b2.getThumbnail('product', productId);
+
+  return res.status(200).json({
+    payload: result
+  })
+  
+}
+
 
 const productController = {
   getProducts,
@@ -92,6 +111,7 @@ const productController = {
   createProduct,
   uploadImages,
   getImageList,
+  getThumbnail,
 }
 
 module.exports = productController
