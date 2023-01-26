@@ -33,8 +33,13 @@ const getPostById = async (postId) => {
 const createPost = async (data) => {
     try {
       const index = data.content.indexOf('\n');
-      const title = data.content.slice(0,index)
-
+      let title;
+      if(index == -1) {
+        title = data.content;
+      } else {
+        title = data.content.slice(0,index);
+      }
+      
       const result = await pool.query(`
       insert into NEIGHBORHOOD(writer_id, classif_id, title, content)
       values(13, 2003, ?, ?)`,
