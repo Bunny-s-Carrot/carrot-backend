@@ -1,3 +1,4 @@
+const e = require('express');
 const pool = require('../../config/database');
 
 const getUsers = async () => {
@@ -67,9 +68,9 @@ const deleteLocation = async (user_id) => {
       ]
     )
 
-    return result[0]
+    return result[0];
   } catch (e) {
-    throw Error(e)
+    throw Error(e);
   }
 }
 
@@ -98,9 +99,86 @@ const deleteLocation2 = async (user_id) => {
       ]
     )
 
-    return result[0]
+    return result[0];
   } catch (e) {
-    throw Error(e)
+    throw Error(e);
+  }
+}
+
+const updateArea = async (data) => {
+  try {
+    const result = await pool.query(
+      `update USER set area=? where user_id = ?`,
+      [
+        data.area,
+        data.user_id,
+      ]
+    )
+
+    return result[0];
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+const updateArea2 = async (data) => {
+  try {
+    const result = await pool.query(
+      `update USER set area2=? where user_id = ?`,
+      [
+        data.area,
+        data.user_id
+      ]
+    )
+
+    return result[0];
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+const getArea = async (user_id) => {
+  try {
+    const data = await pool.query(
+      `select area from USER where user_id = ?`,
+      [
+        user_id
+      ]
+    )
+
+    return data[0][0];
+  } catch(e) {
+    throw Error(e);
+  }
+}
+
+const getArea2 = async (user_id) => {
+  try {
+    const data = await pool.query(
+      `select area2 from USER where user_id = ?`,
+      [
+        user_id
+      ]
+    )
+
+    return data[0][0];
+  } catch(e) {
+    throw Error(e);
+  }
+}
+
+const getActiveLocation = async(user_id) => {
+  try {
+    const data = await pool.query(
+      `select active_location from USER where user_id = ?`,
+      [
+        user_id
+      ]
+    )
+
+    return data[0][0];
+  } catch (e) {
+    throw Error(e);
   }
 }
 
@@ -162,6 +240,11 @@ const userService = {
   deleteLocation,
   updateLocation2,
   deleteLocation2,
+  updateArea,
+  updateArea2,
+  getArea,
+  getArea2,
+  getActiveLocation,
   updateActiveLocation,
 }
 
