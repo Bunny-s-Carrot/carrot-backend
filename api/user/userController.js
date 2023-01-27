@@ -132,7 +132,7 @@ const updateArea = async (req, res) => {
 const getArea = async (req, res) => {
   const user_id = req.params.user_id;
   const path = req.originalUrl.split('/').at(-1);
-  console.log(req);
+
   if (path === 'area1') {
     const result = await userService.getArea(user_id);
 
