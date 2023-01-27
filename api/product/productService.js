@@ -5,7 +5,8 @@ const getProducts = async () => {
     const products = await pool.execute(
       `select PRODUCT.*, LOCATION.lowest_sect_name from PRODUCT 
       left join LOCATION 
-      on PRODUCT.seller_location = LOCATION.location_id`,
+      on PRODUCT.seller_location = LOCATION.location_id
+      order by product_id desc`,
     )
     return products[0];
   } catch (e) {
