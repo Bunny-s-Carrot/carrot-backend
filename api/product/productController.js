@@ -53,6 +53,15 @@ const createProduct = async (req, res) => {
   })
 }
 
+const deleteProduct = async (req, res) => {
+  const product_id = req.params.product_id;
+  await productService.deleteProduct(product_id);
+
+  return res.status(200).json({
+    message: "Deleted Product"
+  });
+}
+
 const uploadImages = async (req, res, err) => {
   if (err instanceof multer.MulterError) {
     return res.sendStatus(INTERNAL_SERVER_ERROR_STATUS);
@@ -65,14 +74,26 @@ const uploadImages = async (req, res, err) => {
       const buffer = await convertToJPG(files[i].buffer);
 
       const fileName = `product/${productId}/${i}.jpg`
-      await b2.uploadFiles(fileName, buffer);
+      await b2.uploadFiles(fileName, buffer)
+      .then(_ => {return res.json({
+        message: "File Uploaded Successfully"
+      })});
     }
   } catch (e) {
     throw Error(e);
   }
-  
-  return res.json({
-    message: "File Uploaded Successfully"
+}
+
+const deleteImages = async (req, res, err) => {
+  if (err instanceof multer.MulterError) {
+    return res.sendStatus(INTERNAL_SERVER_ERROR_STATUS);
+  }
+
+  const productId = req.params.product_id;
+  await b2.deleteFiles('product', productId);
+
+  return res.status(200).json({
+    message: "Deleted Images Successfully"
   })
 }
 
@@ -109,7 +130,9 @@ const productController = {
   getProducts,
   getProductDetail,
   createProduct,
+  deleteProduct,
   uploadImages,
+  deleteImages,
   getImageList,
   getThumbnail,
 }

@@ -50,10 +50,26 @@ const createProduct = async (data) => {
   }
 }
 
+const deleteProduct = async (product_id) => {
+  try {
+    const result = pool.query(
+      `delete from PRODUCT where product_id = ?`,
+      [
+        product_id
+      ]
+    )
+
+    return result[0];
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
 const productService = {
   getProducts,
   getProductById,
   createProduct,
+  deleteProduct,
 }
 
 module.exports = productService;
