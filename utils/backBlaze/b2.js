@@ -17,10 +17,36 @@ const uploadFiles = async (fileName, data) => {
           uploadAuthToken: res.data?.authorizationToken,
           fileName: fileName,
           data,
-          onUploadProgress: (e) => { console.log(e) }
+          onUploadProgress: (e) => { console.log("HAHAHA", e) },
         })
       })
     
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+const deleteFiles = async (category, productId) => {
+  try {
+    await b2.authorize();
+    const result = await b2.listFileNames({
+      bucketId: process.env.BACKBLAZE_BUCKET_ID,
+      prefix: `${category}/${productId}`
+    })
+
+    const files = result.data?.files;
+
+    for (let file of files) {
+      const fileName = file.fileName;
+      const fileId = file.fileId;
+
+      await b2.deleteFileVersion({
+        fileId,
+        fileName,
+      })
+    }
+
+    return;
   } catch (e) {
     console.log(e);
   }
@@ -67,6 +93,7 @@ const getThumbnail = async (category, productId) => {
 
 const backBlaze = {
   uploadFiles,
+  deleteFiles,
   getFileList,
   getThumbnail,
 }

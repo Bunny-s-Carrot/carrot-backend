@@ -109,14 +109,17 @@ const refreshToken = (req, res) => {
   )
 }
   
-
-const logout = (req, res) => {
+const logout = async (req, res) => {
   const cookies = req.cookies;
 
   if (!cookies?.refresh_token) return res.sendStatus(204);
     
-  res.clearCookie('refresh_token', {httpOnly: true, sameSite: 'none', secure: false })
-  res.json({ message: 'Cookie Cleared' })
+  await res.clearCookie('refresh_token', {
+    secure: false,
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000
+  })
+  return res.json({ message: 'Cookie Cleared' })
 }
 
 const authController = {
