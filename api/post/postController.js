@@ -20,8 +20,15 @@ const getPostDetail = async (req, res) => {
   const postId = req.params.post_id;
   const postInfo = await postService.getPostById(postId);
   const userInfo = await userService.getUserById(postInfo?.writer_id);
+  const commentInfo = await postService.getComments(postId);
 
-  const result = { user: userInfo, post: postInfo };
+  let result;
+  
+  if (commentInfo.length === 0) {
+    result = { user: userInfo, post: postInfo }
+  } else {
+    result = { user: userInfo, post: postInfo, comment: commentInfo }
+  };
 
   if (postInfo === undefined) {
     return res.status(404).json({
@@ -30,9 +37,10 @@ const getPostDetail = async (req, res) => {
     });
   }
 
+
   return res.status(200).json({
     success: 1,
-    payload: result,
+    payload: result
   });
 };
 
