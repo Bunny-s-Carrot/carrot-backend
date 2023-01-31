@@ -75,10 +75,11 @@ const uploadImages = async (req, res, err) => {
 
       const fileName = `product/${productId}/${i}.jpg`
       await b2.uploadFiles(fileName, buffer)
-      .then(_ => {return res.json({
-        message: "File Uploaded Successfully"
-      })});
     }
+    
+    return res.json({
+      message: "File Uploaded Successfully"
+    });
   } catch (e) {
     throw Error(e);
   }
