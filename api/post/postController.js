@@ -69,11 +69,31 @@ const createPost = async (req, res) => {
   });
 };
 
+const createComment = async (req, res) => {
+  const body = req.body;
+  await postService.createComment(body);
+
+  return res.json({
+    message: "Create Comment Successfully"
+  });
+}
+
+const createRecomment = async (req, res) => {
+  const body = req.body;
+  await postService.createRecomment(body);
+
+  return res.json({
+    message: "Create Recomment Successfully"
+  });
+}
+
 const postController = {
   getPosts,
   getPostDetail,
   getPostsByCategory,
   createPost,
+  createComment,
+  createRecomment
 };
 
 module.exports = postController;
