@@ -6,15 +6,8 @@ const { convertToJPG } = require('../../utils/file/extension')
 
 
 const getProducts = async (req, res) => {
-
-  const results = await productService.getProducts();
-
-  if(results.length === 0) {
-    return res.status(404).json({
-      success: 0,
-      message: "Products Not Found"
-    })
-  }
+  const admCodes = req.query.admCodes;
+  const results = await productService.getProducts(admCodes);
 
   return res.status(200).json({
     success: 1,
@@ -44,6 +37,7 @@ const getProductDetail = async (req, res) => {
 
 const createProduct = async (req, res) => {
   const body = req.body;
+  console.log(body);
   const result = await productService.createProduct(body);
 
   return res.status(200).json({

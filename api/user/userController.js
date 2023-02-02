@@ -105,53 +105,6 @@ const deleteLocation = async (req, res) => {
  })
 }
 
-const updateArea = async (req, res) => {
-  const user_id = req.params.user_id;
-  const area = req.params.area;
-  const path = req.originalUrl.split('/').at(-2);
-
-  if (path === 'area1') {
-    await userService.updateArea({ area, user_id });
-
-    return res.status(200).json({
-      message: "Updated Area Successfully"
-    })
-
-  } else if (path === 'area2') {
-    await userService.updateArea2({ area, user_id });
-
-    return res.status(200).json({
-      message: "Updated Area Successfully"
-    })
-
- } else return res.json({
-    message: "Abnormal Access"
- })
-}
-
-const getArea = async (req, res) => {
-  const user_id = req.params.user_id;
-  const path = req.originalUrl.split('/').at(-1);
-
-  if (path === 'area1') {
-    const result = await userService.getArea(user_id);
-
-    return res.status(200).json({
-      payload: result
-    });
-  } else if (path === 'area2') {
-    const result = await userService.getArea2(user_id);
-
-    return res.status(200).json({
-      payload: result
-    });
-  } else {
-    return res.json({
-      message: "Abnormal Access"
-    });
-  }
-}
-
 const getActiveLocation = async (req, res) => {
   const user_id = req.params.user_id;
 
@@ -213,8 +166,6 @@ const userController = {
   getLocationById,
   updateLocation,
   deleteLocation,
-  updateArea,
-  getArea,
   getActiveLocation,
   updateActiveLocation,
   updateUser,

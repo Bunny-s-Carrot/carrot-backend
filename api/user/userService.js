@@ -17,7 +17,7 @@ const getUsers = async () => {
 const getUserById = async (user_id) => {
   try {
     const userDetail = await pool.query(
-      `select user_id, email, name, location, manner_temp, lowest_sect_name from USER 
+      `select user_id, email, name, location, manner_temp, addr_name from USER 
       inner join LOCATION on location = location_id
       where user_id = ?`,
       [user_id],   
@@ -105,68 +105,6 @@ const deleteLocation2 = async (user_id) => {
   }
 }
 
-const updateArea = async (data) => {
-  try {
-    const result = await pool.query(
-      `update USER set area=? where user_id = ?`,
-      [
-        data.area,
-        data.user_id,
-      ]
-    )
-
-    return result[0];
-  } catch (e) {
-    throw Error(e);
-  }
-}
-
-const updateArea2 = async (data) => {
-  try {
-    const result = await pool.query(
-      `update USER set area2=? where user_id = ?`,
-      [
-        data.area,
-        data.user_id
-      ]
-    )
-
-    return result[0];
-  } catch (e) {
-    throw Error(e);
-  }
-}
-
-const getArea = async (user_id) => {
-  try {
-    const data = await pool.query(
-      `select area from USER where user_id = ?`,
-      [
-        user_id
-      ]
-    )
-
-    return data[0][0];
-  } catch(e) {
-    throw Error(e);
-  }
-}
-
-const getArea2 = async (user_id) => {
-  try {
-    const data = await pool.query(
-      `select area2 from USER where user_id = ?`,
-      [
-        user_id
-      ]
-    )
-
-    return data[0][0];
-  } catch(e) {
-    throw Error(e);
-  }
-}
-
 const getActiveLocation = async(user_id) => {
   try {
     const data = await pool.query(
@@ -240,10 +178,6 @@ const userService = {
   deleteLocation,
   updateLocation2,
   deleteLocation2,
-  updateArea,
-  updateArea2,
-  getArea,
-  getArea2,
   getActiveLocation,
   updateActiveLocation,
 }
