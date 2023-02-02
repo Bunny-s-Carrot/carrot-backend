@@ -6,7 +6,7 @@ const getProducts = async (admCodes) => {
       `select PRODUCT.*, LOCATION.addr_name from PRODUCT 
       left join LOCATION 
       on PRODUCT.seller_location = LOCATION.location_id
-      where PRODUCT.seller_h_code in (${admCodes})
+      where PRODUCT.seller_adm_cd in (${admCodes})
       order by product_id desc`,
     )
 
@@ -31,12 +31,12 @@ const getProductById = async (productId) => {
 const createProduct = async (data) => {
   try {
     const result = await pool.query(
-      `insert into PRODUCT(seller_id, seller_location, seller_h_code, title, price, contents, wanted_location, price_suggest, share, classif_id)
+      `insert into PRODUCT(seller_id, seller_location, seller_adm_cd, title, price, contents, wanted_location, price_suggest, share, classif_id)
       values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         data.seller_id,
         data.seller_location,
-        data.seller_h_code,
+        data.seller_adm_cd,
         data.title,
         data.price,
         data.contents,
