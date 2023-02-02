@@ -98,7 +98,6 @@ const createComment = async (data) => {
         data.content
       ],
     )
-    console.log(result);
 
     const result1 = await pool.query(
       `select comment_id from COMMENT where comment = ?`,
