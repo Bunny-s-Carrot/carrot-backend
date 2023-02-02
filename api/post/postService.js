@@ -34,7 +34,7 @@ const getPostById = async (postId) => {
 const getPostsByCategory = async (categoryId) => {
   try {
     const posts_c = await pool.query(
-      `select NEIGHBORHOOD.*, lowest_sect_name, category_name from NEIGHBORHOOD 
+      `select NEIGHBORHOOD.*, addr_name, category_name from NEIGHBORHOOD 
       inner join USER on writer_id = user_id 
       inner join LOCATION on location = location_id
       inner join POSTCATEGORY on category_id = classif_id
