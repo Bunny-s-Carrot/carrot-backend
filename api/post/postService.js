@@ -4,7 +4,7 @@ const pool = require("../../config/database");
 const getPosts = async () => {
   try {
     const posts = await pool.query(
-      `select NEIGHBORHOOD.*, lowest_sect_name, category_name from NEIGHBORHOOD 
+      `select NEIGHBORHOOD.*, addr_name, category_name from NEIGHBORHOOD 
     inner join USER on writer_id = user_id 
     inner join LOCATION on location = location_id
     inner join POSTCATEGORY on category_id = classif_id
@@ -74,7 +74,7 @@ const createPost = async (data) => {
 const getComments = async (postId) => {
   try {
     const comments = await pool.query(
-      `select comment_id, name, lowest_sect_name, COMMENT.created_at, comment, likes, depth, mother_id from COMMENT 
+      `select comment_id, name, addr_name, COMMENT.created_at, comment, likes, depth, mother_id from COMMENT 
       inner JOIN USER on user_id = writer_id
       inner join LOCATION on location = location_id
       where post_id = ?
