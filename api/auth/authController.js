@@ -58,9 +58,12 @@ const login = async (req, res) => {
   const locationData = await userService.getLocationById(result.user_id);
   const locationName = await locationService.getLocationNameById(locationData.location);
   const locationName2 = locationData.location2 && await locationService.getLocationNameById(locationData.location2);
-  
-  locationData['location_name'] = locationName?.lowest_sect_name
-  locationData['location_name2'] = locationName2?.lowest_sect_name
+  const admCode = await locationService.getHCodeById(locationData?.location);
+  const admCode2 = locationData.location2 && await locationService.getHCodeById(locationData?.location2)
+  locationData['location_name'] = locationName?.addr_name
+  locationData['location_name2'] = locationName2?.addr_name
+  locationData['admCode'] = admCode?.adm_cd;
+  locationData['admCode2'] = admCode2?.adm_cd;
   
   const passwordCorrect = comparePassword(body.password, result.password);
   if (passwordCorrect) {

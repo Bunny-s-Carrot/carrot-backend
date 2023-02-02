@@ -17,7 +17,7 @@ const getUsers = async () => {
 const getUserById = async (user_id) => {
   try {
     const userDetail = await pool.query(
-      `select user_id, email, name, location, manner_temp, addr_name from USER 
+      `select user_id, email, name, location, manner_temp, addr_name, adm_cd from USER 
       inner join LOCATION on location = location_id
       where user_id = ?`,
       [user_id],   
