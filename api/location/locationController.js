@@ -1,6 +1,6 @@
 const locationService = require('./locationService');
 
-const getLocations = async (req, res) => {
+const getLocations = async (_, res) => {
   const results = await locationService.getLocations();
 
   if (results.length === 0) {
@@ -16,8 +16,25 @@ const getLocations = async (req, res) => {
   })
 }
 
+const getHcodeById = async(req, res) => {
+  const location_id = req.params.location_id;
+  const result = await locationService.getHCodeById(location_id);
+
+  if (result === undefined) {
+    return res.status(404).json({
+      success: 0,
+      message: 'Result Not Found'
+    })
+  }
+
+  return res.status(200).json({
+    success: 1,
+    payload: result,
+  })
+}
+
 const getCoordsById = async (req, res) => {
-  const locationId = req.query.location_id;
+  const locationId = req.params.location_id;
 
   const result = await locationService.getCoordsById(locationId);
 
@@ -36,6 +53,7 @@ const getCoordsById = async (req, res) => {
 
 const locationController = {
   getLocations,
+  getHcodeById,
   getCoordsById,
 }
 

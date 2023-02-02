@@ -1,13 +1,15 @@
 const pool = require('../../config/database');
 
-const getProducts = async () => {
+const getProducts = async (admCodes) => {
   try {
     const products = await pool.execute(
-      `select PRODUCT.*, LOCATION.lowest_sect_name from PRODUCT 
+      `select PRODUCT.*, LOCATION.addr_name from PRODUCT 
       left join LOCATION 
       on PRODUCT.seller_location = LOCATION.location_id
+      where PRODUCT.seller_h_code in (${admCodes})
       order by product_id desc`,
     )
+
     return products[0];
   } catch (e) {
     throw Error(e);
@@ -29,11 +31,12 @@ const getProductById = async (productId) => {
 const createProduct = async (data) => {
   try {
     const result = await pool.query(
-      `insert into PRODUCT(seller_id, seller_location, title, price, contents, wanted_location, price_suggest, share, classif_id)
-      values(?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `insert into PRODUCT(seller_id, seller_location, seller_h_code, title, price, contents, wanted_location, price_suggest, share, classif_id)
+      values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         data.seller_id,
         data.seller_location,
+        data.seller_h_code,
         data.title,
         data.price,
         data.contents,
