@@ -64,7 +64,8 @@ const createPost = async (data) => {
       insert into NEIGHBORHOOD(writer_id, classif_id, title, content)
       values(13, 2003, ?, ?)`,
       [title, data.content]
-    );
+    )
+    return result[0];
   } catch (e) {
     throw Error(e);
   }

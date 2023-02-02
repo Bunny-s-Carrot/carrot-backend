@@ -1,5 +1,8 @@
+const multer = require('multer');
 const userService = require("../user/userService");
 const postService = require("./postService");
+const b2 = require("../../utils/backBlaze/b2");
+const { convertToJPG } = require('../../utils/file/extension')
 
 const getPosts = async (req, res) => {
   const results = await postService.getPosts();
@@ -62,9 +65,10 @@ const getPostsByCategory = async (req, res) => {
 
 const createPost = async (req, res) => {
   const body = req.body;
-  await postService.createPost(body);
+  const result = await postService.createPost(body);
 
   return res.json({
+    post_id: result.insertId,
     message: "Writed Post Successfully",
   });
 };
@@ -87,13 +91,44 @@ const createRecomment = async (req, res) => {
   });
 }
 
+const uploadImages = async (req, res, err) => {
+  if (err instanceof multer.MulterError) {
+    return res.sendStatus(INTERNAL_SERVER_ERROR_STATUS);
+  }
+  const files = req.files;
+  const postId = req.body.payload.data.post_id;
+
+  try {
+    for (let i = 0; i < files.length; i++) {
+      const buffer = await convertToJPG(files[i].buffer);
+
+      const fileName = `post/${postId}/${i}.jpg`
+      await b2.uploadFiles(fileName, buffer)
+    }
+    
+    return res.json({
+      message: "File Uploaded Successfully"
+    });
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+const deleteImages = async (req, res, err) => {
+  if (err instanceof multer.MulterError) {
+    return res.sendStatus(INTERNAL_SERVER_ERROR_STATUS);
+  }
+}
+
 const postController = {
   getPosts,
   getPostDetail,
   getPostsByCategory,
   createPost,
   createComment,
-  createRecomment
+  createRecomment,
+  uploadImages,
+  deleteImages
 };
 
 module.exports = postController;
