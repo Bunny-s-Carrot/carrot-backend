@@ -62,8 +62,8 @@ const createPost = async (data) => {
     const result = await pool.query(
       `
       insert into NEIGHBORHOOD(writer_id, classif_id, title, content)
-      values(12, 2003, ?, ?)`,
-      [title, data.content]
+      values(12, ?, ?, ?)`,
+      [data.classif_id,title, data.content]
     )
     return result[0];
   } catch (e) {
