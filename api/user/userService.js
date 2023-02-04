@@ -105,7 +105,7 @@ const deleteLocation2 = async (user_id) => {
   }
 }
 
-const getActiveLocation = async(user_id) => {
+const getActiveLocation = async (user_id) => {
   try {
     const data = await pool.query(
       `select active_location from USER where user_id = ?`,
@@ -154,18 +154,13 @@ const updateUser = (data, callBack) => {
   )
 }
   
-const withdraw = (id, callBack) => {
-  pool.query(
+const withdraw = async (id, callBack) => {
+  await pool.query(
     `delete from USER where user_id = ?`,
     [id],
-    (err, results, fields) => {
-      if (err) {
-        return callBack(err);
-      }
+  );
 
-      return callBack(null, results[0]);
-    }
-  )
+  return;
 }
 
 const userService = {
