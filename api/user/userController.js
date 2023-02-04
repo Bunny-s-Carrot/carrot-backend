@@ -146,17 +146,22 @@ const updateUser = (req, res) => {
   })
 }
 
-const withdraw = (req, res) => {
+const withdraw = async (req, res) => {
   const id = req.params.user_id;
-  userService.withdraw(id, (err) => {
-    if (err) {
-      throw Error(err);
-    }
+  await userService.withdraw(id);
+
+  const cookies = req.cookies;
+  if (!cookies?.refresh_token) return res.sendStatus(204);
+
+  await res.clearCookie('refresh_token', {
+    secure: false,
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000
+  })
       
-    return res.json({
-      success: 1,
-      message: "Deleted Successfully"
-    });
+  return res.status(200).json({
+    success: 1,
+    message: "Deleted Successfully"
   });
 }
 
