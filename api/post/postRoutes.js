@@ -9,6 +9,7 @@ router.post("/", postController.createPost);
 router.post("/:post_id/comment", postController.createComment);
 router.post("/:post_id/comment/:comment_id", postController.createRecomment);
 router.post('/image/upload', postController.uploadImages);
-router.post('/:post_id/heart',postController.Heart);
+router.post('/:post_id/heart',postController.updateHeart);
+router.post('/:post_id/empa',postController.updateEmpa);
 
 module.exports = router;

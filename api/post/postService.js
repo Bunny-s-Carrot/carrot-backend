@@ -141,19 +141,21 @@ const createRecomment = async (data) => {
   }
 }
 
-const getHeartOne = async(postId, userId) => {
+const getHeart = async(postId, userId) => {
   try {
     const result = await pool.query(
-      `select count(number) from HEART where post_id=? and user_id=?`,
+      `select number from HEART where post_id=? and user_id=?`,
       [postId, userId]
     )
-    return result[0][0]["count(number)"];
+
+    return result[0];
+    
   } catch (e) {
     throw Error(e);
   }
 }
 
-const Heart = async (data) => {
+const updateHeart = async (data) => {
   try {
     let result;
     if (data.plus) {
@@ -181,6 +183,58 @@ const Heart = async (data) => {
   }
 }
 
+const getEmpaOne = async(postId, userId) => {
+  try {
+    const result = await pool.query(
+      `select number from THUMB where post_id=? and user_id=?`,
+      [postId, userId]
+    )
+    return result[0];
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+const getEmpaAll = async(postId) => {
+  try {
+    const result = await pool.query(
+      `select count(number) from THUMB where post_id=?`,
+      [postId]
+    )
+    return result[0][0]["count(number)"];
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+const updateEmpa = async (data) => {
+  try {
+    let result;
+    if (data.plus) {
+      result = await pool.query(
+        `insert into THUMB(user_id, post_id) 
+        values(?,?)`,
+        [
+          data.user_id,
+          data.post_id
+        ]
+      )
+    } else {
+      result = await pool.query(
+        `delete from THUMB where user_id = ? and post_id = ?`,
+        [
+          data.user_id,
+          data.post_id
+        ]
+      )
+    }
+
+    return result[0]
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
 const postService = {
   getPosts,
   getPostById,
@@ -189,8 +243,11 @@ const postService = {
   getComments,
   createComment,
   createRecomment,
-  getHeartOne,
-  Heart
+  getHeart,
+  updateHeart,
+  getEmpaOne,
+  getEmpaAll,
+  updateEmpa
 };
 
 module.exports = postService;
