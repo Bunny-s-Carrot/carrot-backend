@@ -23,14 +23,16 @@ const getPostDetail = async (req, res) => {
   const postId = req.params.post_id;
   const postInfo = await postService.getPostById(postId);
   const userInfo = await userService.getUserById(postInfo?.writer_id);
+  const userId = userInfo.user_id;
   const commentInfo = await postService.getComments(postId);
+  const heartInfo = await postService.getHeartOne(postId, userId);
 
   let result;
   
   if (commentInfo.length === 0) {
-    result = { user: userInfo, post: postInfo }
+    result = { user: userInfo, post: postInfo, heart: heartInfo }
   } else {
-    result = { user: userInfo, post: postInfo, comment: commentInfo }
+    result = { user: userInfo, post: postInfo, heart: heartInfo, comment: commentInfo }
   };
 
   if (postInfo === undefined) {
@@ -120,6 +122,30 @@ const deleteImages = async (req, res, err) => {
   }
 }
 
+const getImageList = async (req, res, err) => {
+  if (err instanceof multer.MulterError) {
+    return res.sendStatus(INTERNAL_SERVER_ERROR_STATUS);
+  }
+
+  const postId = req.params.post_id;
+
+  const result = await b2.getFileList('post', postId);
+
+  return res.status(200).json({
+    payload: result
+  });
+}
+
+const Heart = async (req, res) => {
+  const body = req.body;
+  const result = await postService.Heart(body);
+
+  return res.status(200).json({
+    success: 1,
+    message: "Heart update"
+  })
+}
+
 const postController = {
   getPosts,
   getPostDetail,
@@ -128,7 +154,9 @@ const postController = {
   createComment,
   createRecomment,
   uploadImages,
-  deleteImages
+  deleteImages,
+  getImageList,
+  Heart
 };
 
 module.exports = postController;
