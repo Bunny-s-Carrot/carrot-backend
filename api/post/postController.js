@@ -21,16 +21,23 @@ const getPosts = async (req, res) => {
 
 const getPostDetail = async (req, res) => {
   const postId = req.params.post_id;
+  const loginId = req.query.loginId;
   const postInfo = await postService.getPostById(postId);
   const userInfo = await userService.getUserById(postInfo?.writer_id);
+  const userId = userInfo.user_id;
   const commentInfo = await postService.getComments(postId);
+  const getheart = await postService.getHeart(postId, loginId);
+  let heartInfo = getheart.length !== 0;
+  const getempaOne = await postService.getEmpaOne(postId, loginId);
+  let empaoneInfo = getempaOne.length !== 0;
+  const empaallInfo = await postService.getEmpaAll(postId);
 
   let result;
   
   if (commentInfo.length === 0) {
-    result = { user: userInfo, post: postInfo }
+    result = { user: userInfo, post: postInfo, heart: heartInfo, empaOne: empaoneInfo, empaAll: empaallInfo }
   } else {
-    result = { user: userInfo, post: postInfo, comment: commentInfo }
+    result = { user: userInfo, post: postInfo, heart: heartInfo, empaOne: empaoneInfo, empaAll: empaallInfo, comment: commentInfo }
   };
 
   if (postInfo === undefined) {
@@ -39,7 +46,6 @@ const getPostDetail = async (req, res) => {
       message: "Post Not Found",
     });
   }
-
 
   return res.status(200).json({
     success: 1,
@@ -57,6 +63,7 @@ const getPostsByCategory = async (req, res) => {
       message: "Posts Not Found_c",
     });
   }
+
   return res.status(200).json({
     success: 1,
     payload: results,
@@ -120,6 +127,39 @@ const deleteImages = async (req, res, err) => {
   }
 }
 
+const getImageList = async (req, res, err) => {
+  if (err instanceof multer.MulterError) {
+    return res.sendStatus(INTERNAL_SERVER_ERROR_STATUS);
+  }
+
+  const postId = req.params.post_id;
+  const result = await b2.getFileList('post', postId);
+
+  return res.status(200).json({
+    payload: result
+  });
+}
+
+const updateHeart = async (req, res) => {
+  const body = req.body;
+  const result = await postService.updateHeart(body);
+
+  return res.status(200).json({
+    success: 1,
+    message: "Heart update"
+  })
+}
+
+const updateEmpa = async (req, res) => {
+  const body = req.body;
+  const result = await postService.updateEmpa(body);
+
+  return res.status(200).json({
+    success: 1,
+    message: "Empa update"
+  })
+}
+
 const postController = {
   getPosts,
   getPostDetail,
@@ -128,7 +168,10 @@ const postController = {
   createComment,
   createRecomment,
   uploadImages,
-  deleteImages
+  deleteImages,
+  getImageList,
+  updateHeart,
+  updateEmpa
 };
 
 module.exports = postController;
