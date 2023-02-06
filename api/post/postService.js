@@ -1,13 +1,13 @@
-const { query } = require('../../config/database');
 const pool = require("../../config/database");
 
-const getPosts = async () => {
+const getPosts = async (admCodes) => {
   try {
     const posts = await pool.query(
-      `select NEIGHBORHOOD.*, addr_name, category_name from NEIGHBORHOOD 
+      `select NEIGHBORHOOD.*, addr_name, adm_cd, category_name from NEIGHBORHOOD 
     inner join USER on writer_id = user_id 
-    inner join LOCATION on location = location_id
+    inner join LOCATION on writer_location = location_id
     inner join POSTCATEGORY on category_id = classif_id
+    where adm_cd in (${admCodes})
     order by post_id desc;`
     );
 
@@ -61,9 +61,9 @@ const createPost = async (data) => {
 
     const result = await pool.query(
       `
-      insert into NEIGHBORHOOD(writer_id, classif_id, title, content)
-      values(12, ?, ?, ?)`,
-      [data.classif_id,title, data.content]
+      insert into NEIGHBORHOOD(writer_id, writer_location, classif_id, title, content)
+      values(?, ?, ?, ?, ?)`,
+      [data.writer_id, data.writer_location, data.classif_id, title, data.content]
     )
     return result[0];
   } catch (e) {

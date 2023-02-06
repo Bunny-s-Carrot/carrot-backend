@@ -5,14 +5,9 @@ const b2 = require("../../utils/backBlaze/b2");
 const { convertToJPG } = require('../../utils/file/extension')
 
 const getPosts = async (req, res) => {
-  const results = await postService.getPosts();
+  const admCodes = req.query.admCodes;
+  const results = await postService.getPosts(admCodes);
 
-  if (results.length === 0) {
-    return res.status(404).json({
-      success: 0,
-      message: "Posts Not Found",
-    });
-  }
   return res.status(200).json({
     success: 1,
     payload: results,
