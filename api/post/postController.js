@@ -16,13 +16,14 @@ const getPosts = async (req, res) => {
 
 const getPostDetail = async (req, res) => {
   const postId = req.params.post_id;
+  const loginId = req.query.loginId;
   const postInfo = await postService.getPostById(postId);
   const userInfo = await userService.getUserById(postInfo?.writer_id);
   const userId = userInfo.user_id;
   const commentInfo = await postService.getComments(postId);
-  const getheart = await postService.getHeart(postId, userId);
+  const getheart = await postService.getHeart(postId, loginId);
   let heartInfo = getheart.length !== 0;
-  const getempaOne = await postService.getEmpaOne(postId, userId);
+  const getempaOne = await postService.getEmpaOne(postId, loginId);
   let empaoneInfo = getempaOne.length !== 0;
   const empaallInfo = await postService.getEmpaAll(postId);
 
