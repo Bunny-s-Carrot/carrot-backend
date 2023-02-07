@@ -2,7 +2,7 @@ const pool = require('../../config/database');
 
 const getProducts = async (admCodes) => {
   try {
-    const products = await pool.execute(
+    const products = await pool.query(
       `select PRODUCT.*, LOCATION.addr_name from PRODUCT 
       left join LOCATION 
       on PRODUCT.seller_location = LOCATION.location_id
