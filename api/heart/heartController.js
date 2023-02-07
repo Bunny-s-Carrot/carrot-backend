@@ -1,8 +1,12 @@
+const productService = require('../product/productService');
 const heartService = require('./heartService');
 
 const updateHeart = async (req, res) => {
   const body = req.body;
+  const plus = req.body.plus;
+  const product_id = req.body.product_id;
   await heartService.updateHeart(body);
+  await productService.updateHeart(product_id, plus);
 
   return res.status(200).json({
     success: 1,
