@@ -141,7 +141,7 @@ const getImageList = async (req, res, err) => {
 
 const updateHeart = async (req, res) => {
   const body = req.body;
-  const result = await postService.updateHeart(body);
+  await postService.updateHeart(body);
 
   return res.status(200).json({
     success: 1,
@@ -151,7 +151,7 @@ const updateHeart = async (req, res) => {
 
 const updateEmpa = async (req, res) => {
   const body = req.body;
-  const result = await postService.updateEmpa(body);
+  await postService.updateEmpa(body);
 
   return res.status(200).json({
     success: 1,

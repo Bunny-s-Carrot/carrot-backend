@@ -1,8 +1,9 @@
 const multer = require('multer');
 const userService = require('../user/userService');
 const productService = require('./productService');
+const heartService = require('../heart/heartService');
 const b2 = require("../../utils/backBlaze/b2");
-const { convertToJPG } = require('../../utils/file/extension')
+const { convertToJPG } = require('../../utils/file/extension');
 
 
 const getProducts = async (req, res) => {
@@ -18,11 +19,10 @@ const getProducts = async (req, res) => {
 const getProductDetail = async (req, res) => {
   const productId = req.params.product_id;
   const productInfo = await productService.getProductById(productId);
-  const userInfo = await userService.getUserById(productInfo?.seller_id);
+  const sellerInfo = await userService.getUserById(productInfo?.seller_id);
+  const result = { seller: sellerInfo, product: productInfo };
 
-  const result = {user: userInfo, product: productInfo}
-
-  if (productInfo === undefined) {
+  if (!productInfo) {
     return res.status(404).json({
       success: 0,
       message: "Product Not Found"
