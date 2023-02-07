@@ -68,11 +68,32 @@ const deleteProduct = async (product_id) => {
   }
 }
 
+const updateHeart = async (product_id, plus) => {
+  try {
+    if (plus) {
+      const result = pool.query(
+        `update PRODUCT set heart = heart + 1 where product_id = ${product_id}`
+      );
+
+      return result[0];
+    } else {
+      const result = pool.query(
+        `update PRODUCT set heart = heart - 1 where product_id = ${product_id}`
+      );
+
+      return result[0];
+    }
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
 const productService = {
   getProducts,
   getProductById,
   createProduct,
   deleteProduct,
+  updateHeart,
 }
 
 module.exports = productService;
