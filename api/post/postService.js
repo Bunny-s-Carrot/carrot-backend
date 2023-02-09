@@ -20,8 +20,9 @@ const getPosts = async (admCodes) => {
 const getPostById = async (postId) => {
   try {
     const postDetail = await pool.query(
-      `select * from NEIGHBORHOOD
+      `select NEIGHBORHOOD.*, category_name, addr_name from NEIGHBORHOOD
       inner join POSTCATEGORY on category_id = classif_id
+      inner join LOCATION on writer_location = location_id
       where post_id = ?`,
       [postId]
     );
@@ -61,9 +62,9 @@ const createPost = async (data) => {
 
     const result = await pool.query(
       `
-      insert into NEIGHBORHOOD(writer_id, writer_location, classif_id, title, content)
-      values(?, ?, ?, ?, ?)`,
-      [data.writer_id, data.writer_location, data.classif_id, title, data.content]
+      insert into NEIGHBORHOOD(writer_id, writer_location, classif_id, title, content, image)
+      values(?, ?, ?, ?, ?, ?)`,
+      [data.writer_id, data.writer_location, data.classif_id, title, data.content, data.img]
     )
     return result[0];
   } catch (e) {
@@ -74,7 +75,7 @@ const createPost = async (data) => {
 const getComments = async (postId) => {
   try {
     const comments = await pool.query(
-      `select comment_id, name, addr_name, COMMENT.created_at, comment, likes, depth, mother_id from COMMENT 
+      `select comment_id, name, writer_id, addr_name, COMMENT.created_at, comment, likes, depth, mother_id from COMMENT 
       inner JOIN USER on user_id = writer_id
       inner join LOCATION on location = location_id
       where post_id = ?
@@ -116,6 +117,10 @@ const createComment = async (data) => {
       ]
     )
 
+    const upd = await pool.query(
+      `update NEIGHBORHOOD set chat = chat + 1 where post_id = ${data.post_id}`
+    )
+
     return result2[0]
   } catch (e) {
     throw Error(e);
@@ -133,6 +138,10 @@ const createRecomment = async (data) => {
         data.content,
         data.mother_id
       ],
+    )
+
+    const upd = await pool.query(
+      `update NEIGHBORHOOD set chat = chat + 1 where post_id = ${data.post_id}`
     )
     
     return result[0]
@@ -219,6 +228,10 @@ const updateEmpa = async (data) => {
           data.post_id
         ]
       )
+
+      const upd = await pool.query(
+        `update NEIGHBORHOOD set empa = empa + 1 where post_id = ${data.post_id}`
+      )
     } else {
       result = await pool.query(
         `delete from THUMB where user_id = ? and post_id = ?`,
@@ -226,6 +239,10 @@ const updateEmpa = async (data) => {
           data.user_id,
           data.post_id
         ]
+      )
+
+      const upd = await pool.query(
+        `update NEIGHBORHOOD set empa = empa - 1 where post_id = ${data.post_id}`
       )
     }
 
