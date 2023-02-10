@@ -1,15 +1,13 @@
 const mongoose = require('mongoose');
 
-const connect = () => {
+const mongoDBConnect = () => {
     mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@bunnyscarrot.dqtmy5q.mongodb.net/test`, {
-    dbName: 'carrotDB',
-}, (error) => {
-    if (error) {
-        console.log('연결 에러')
-    } else {
-        console.log('연결 성공')
-    }
-});
+      dbName: 'carrotDB',
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => console.log('MongoDB Connection Successful'))
+    .catch((err) => console.log(err.message));
 }
 
-module.exports = connect;
+module.exports = mongoDBConnect;
