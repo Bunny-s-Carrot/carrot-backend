@@ -1,6 +1,104 @@
+const pool = require("../../config/mysql");
+const Message = require('../../schemas');
 
-
-
-const createMessage = () => {
-
+const createChatRoom = async (data) => {
+  try {
+    const result = await pool.query(
+      `insert into CHATROOM(uuid, seller_id, buyer_id, product_id)
+      values(?, ?, ?, ?)`,
+      [
+        data.uuid,
+        data.seller_id,
+        data.buyer_id,
+        data.product_id,
+      ]
+    )
+    
+    return result[0];
+  } catch (e) {
+    throw Error(e);
+  }
 }
+
+const getChatRoomByUuid = async(uuid) => {
+  try {
+    const data = await pool.query(
+      `select chatRoom_id from CHATROOM where uuid = ${uuid}`
+    );
+
+    return data[0][0];
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+const getChatRoomId = async (product_id, seller_id) => {
+  try {
+    const data = await pool.query(
+      `select chatRoom_id from CHATROOM where product_id = ? and seller_id = ?`,
+      [
+        product_id,
+        seller_id
+      ]
+    );
+
+    return data;
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+const getChatRoomById = async (chatRoom_id) => {
+  try {
+    const data = await pool.query(
+      `select * from CHATROOM where chatRoom_id in (${chatRoom_id})`
+    );
+  
+    return data[0][0];
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+const getChatRoomByBuyerId = async (buyer_id) => {
+  try {
+    const data = await pool.query(
+      `select * from CHATROOM where buyer_id = ${buyer_id}`
+    );
+
+    return data[0][0];
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+
+const createMessage = async (data) => {
+  try {
+    const message = new Message({
+        chatroom_id: data.chatroom_id,
+        message_id: data.message_id,
+        message_from: data.message_from,
+        message_to: data.message_to,
+        content: data.content,
+        created_at: data.created_at
+      })
+      message.save()
+      
+    return message;
+  } catch (e) {
+    throw Error(e);
+  }
+};
+
+const chatService = {
+    createChatRoom,
+    getChatRoomId,
+    getChatRoomByUuid,
+    getChatRoomById,
+    getChatRoomByBuyerId,
+    createMessage
+}
+
+
+module.exports = chatService;
