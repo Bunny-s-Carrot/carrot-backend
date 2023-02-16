@@ -48,13 +48,23 @@ const createMessage = async (req, res) => {
     });
 }
 
+const getMessages = async (req, res) => {
+  const uuid = req.params.uuid;
+  
+  const messages = await chatService.getMessages(uuid)
+
+  return res.status(200).json({
+    payload: messages
+  });
+};
 
 const chatController = {
     createChatRoom,
     getChatRoomById,
     getChatRoomByUuid,
     getChatRoomByBuyerId,
-    createMessage
+    createMessage,
+    getMessages
 }
 
 module.exports = chatController;
