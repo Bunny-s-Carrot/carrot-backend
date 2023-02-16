@@ -37,10 +37,11 @@ server.listen(process.env.SERVER_PORT, () => {
 
 io.on('connection', socket => {
   console.log('Connected with Id: ', socket.id);
+  const uuid = socket.handshake.query.uuid;
 
-  socket.on('message', (data) => {
-    console.log(data);
+  console.log(uuid);
+  io.on(`send message in ${uuid}`, message => {
+    console.log(`send message in ${uuid}`)
+    io.emit(`received message in ${uuid}`, message)
   })
-
-  socket.emit('message2', "서버에서 보내는 메시지");
 })

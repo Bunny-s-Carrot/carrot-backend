@@ -42,7 +42,7 @@ const getChatRoomId = async (product_id, seller_id) => {
       ]
     );
 
-    return data;
+    return data[0][0];
   } catch (e) {
     throw Error(e);
   }
@@ -54,19 +54,34 @@ const getChatRoomById = async (chatRoom_id) => {
       `select * from CHATROOM where chatRoom_id in (${chatRoom_id})`
     );
   
-    return data[0][0];
+    return data[0];
   } catch (e) {
     throw Error(e);
   }
 }
 
-const getChatRoomByBuyerId = async (buyer_id) => {
+const getChatRoomByUserId = async (user_id) => {
   try {
     const data = await pool.query(
-      `select * from CHATROOM where buyer_id = ${buyer_id}`
+      `select * from CHATROOM where buyer_id = ${user_id} or seller_id = ${user_id}`
     );
 
-    return data[0][0];
+    for (let value of data[0]) {
+      let search_id;
+      if (user_id === value.seller_id) {
+        search_id = value.buyer_id;
+      } else {
+        search_id = value.seller_id;
+      }
+
+      const result = await pool.query(`select name, addr_name from USER 
+      join LOCATION where user_id = ${search_id} and location = location_id`);
+        value.displayName = result[0][0].name;
+        value.displayLoc = result[0][0].addr_name;
+    }
+
+    return data[0];
+
   } catch (e) {
     throw Error(e);
   }
@@ -104,7 +119,7 @@ const chatService = {
     getChatRoomId,
     getChatRoomByUuid,
     getChatRoomById,
-    getChatRoomByBuyerId,
+    getChatRoomByUserId,
     createMessage,
     getMessages
 }

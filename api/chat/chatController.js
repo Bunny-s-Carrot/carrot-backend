@@ -29,9 +29,9 @@ const getChatRoomByUuid = async (req, res) => {
   })
 }
 
-const getChatRoomByBuyerId = async (req, res) => {
-  const buyer_id = req.params.user_id;
-  const data = await chatService.getChatRoomByBuyerId(buyer_id);
+const getChatRoomByUserId = async (req, res) => {
+  const user_id = req.params.user_id;
+  const data = await chatService.getChatRoomByUserId(user_id);
   // const sellerInfo = await 
 
   return res.status(200).json({
@@ -62,7 +62,7 @@ const chatController = {
     createChatRoom,
     getChatRoomById,
     getChatRoomByUuid,
-    getChatRoomByBuyerId,
+    getChatRoomByUserId,
     createMessage,
     getMessages
 }
