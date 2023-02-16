@@ -72,12 +72,10 @@ const getChatRoomByBuyerId = async (buyer_id) => {
   }
 }
 
-
 const createMessage = async (data) => {
   try {
     const message = new Message({
-        chatroom_id: data.chatroom_id,
-        message_id: data.message_id,
+        uuid: data.uuid,
         message_from: data.message_from,
         message_to: data.message_to,
         content: data.content,
@@ -91,13 +89,24 @@ const createMessage = async (data) => {
   }
 };
 
+const getMessages = async (uuid) => {
+  try {
+    const result = await Message.find({uuid: uuid});
+    return result;
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+
 const chatService = {
     createChatRoom,
     getChatRoomId,
     getChatRoomByUuid,
     getChatRoomById,
     getChatRoomByBuyerId,
-    createMessage
+    createMessage,
+    getMessages
 }
 
 

@@ -7,5 +7,6 @@ router.get('/chatroom', chatController.getChatRoomById);
 router.get('/chatroom/uuid/:uuid', chatController.getChatRoomByUuid);
 router.get('/chatroom/:user_id', chatController.getChatRoomByBuyerId);
 router.post('/chatroom/1', chatController.createMessage);
+router.get('/chatroom/:uuid/message', chatController.getMessages);
 
 module.exports = router;
