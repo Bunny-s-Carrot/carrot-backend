@@ -37,11 +37,15 @@ server.listen(process.env.SERVER_PORT, () => {
 
 io.on('connection', socket => {
   console.log('Connected with Id: ', socket.id);
-  const uuid = socket.handshake.query.uuid;
 
-  console.log(uuid);
-  io.on(`send message in ${uuid}`, message => {
-    console.log(`send message in ${uuid}`)
-    io.emit(`received message in ${uuid}`, message)
+  socket.on('join-room', uuid => {
+    socket.join(uuid);
+  })
+
+  socket.on(`send-message`, ({ message, userId, uuid, createdAt }) => {
+    let skt = socket.broadcast;
+    skt = uuid ? skt.to(uuid) : skt;
+    console.log(createdAt);
+    skt.emit(`receive-message`, { message, userId, createdAt });
   })
 })
