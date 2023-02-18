@@ -74,10 +74,14 @@ const getChatRoomByUserId = async (user_id) => {
         search_id = value.seller_id;
       }
 
-      const result = await pool.query(`select name, addr_name from USER 
+      const getmysql = await pool.query(`select name, addr_name from USER 
       join LOCATION where user_id = ${search_id} and location = location_id`);
-        value.displayName = result[0][0].name;
-        value.displayLoc = result[0][0].addr_name;
+      value.displayName = getmysql[0][0].name;
+      value.displayLoc = getmysql[0][0].addr_name;
+
+      const getmongo = await Message.findOne({uuid: value.uuid}).sort({created_at: -1});
+      value.recentMessage = getmongo.content;
+      value.recentTime = getmongo.created_at;
     }
 
     return data[0];
