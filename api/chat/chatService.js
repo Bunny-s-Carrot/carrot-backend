@@ -75,7 +75,7 @@ const getChatRoomByUserId = async (user_id) => {
       }
 
       const getmysql = await pool.query(`select name, addr_name from USER 
-      join LOCATION where user_id = ${search_id} and location = location_id`);
+        join LOCATION where user_id = ${search_id} and location = location_id`);
       value.displayName = getmysql[0][0].name;
       value.displayLoc = getmysql[0][0].addr_name;
 

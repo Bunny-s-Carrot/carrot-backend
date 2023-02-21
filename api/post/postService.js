@@ -72,6 +72,31 @@ const createPost = async (data) => {
   }
 };
 
+const deletePost = async (postId) => {
+  try {
+    const post = await pool.query(
+      `delete from NEIGHBORHOOD where post_id = ${postId}`
+    )
+
+    const comment = await pool.query(
+      `delete from COMMENT where post_id = ${postId}`
+    )
+
+    const heart = await pool.query(
+      `delete from HEART where post_id = ${postId}`
+    )
+
+    const thumb = await pool.query(
+      `delete from THUMB where post_id = ${postId}`
+    )
+
+    return 'success'
+  } catch (e) {
+    throw Error(e);
+  }
+};
+
+
 const getComments = async (postId) => {
   try {
     const comments = await pool.query(
@@ -257,6 +282,7 @@ const postService = {
   getPostById,
   getPostsByCategory,
   createPost,
+  deletePost,
   getComments,
   createComment,
   createRecomment,
