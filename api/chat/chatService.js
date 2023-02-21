@@ -68,12 +68,12 @@ const getChatRoomByUserId = async (user_id) => {
 
     for (let value of data[0]) {
       let search_id;
-      if (user_id === value.seller_id) {
+      if (parseInt(user_id) === value.seller_id) {
         search_id = value.buyer_id;
       } else {
         search_id = value.seller_id;
       }
-
+      
       const getmysql = await pool.query(`select name, addr_name from USER 
         join LOCATION where user_id = ${search_id} and location = location_id`);
       value.displayName = getmysql[0][0].name;
