@@ -19,7 +19,6 @@ const getPostDetail = async (req, res) => {
   const loginId = req.query.loginId;
   const postInfo = await postService.getPostById(postId);
   const userInfo = await userService.getUserById(postInfo?.writer_id);
-  const userId = userInfo.user_id;
   const commentInfo = await postService.getComments(postId);
   const getheart = await postService.getHeart(postId, loginId);
   let heartInfo = getheart.length !== 0;
@@ -75,6 +74,16 @@ const createPost = async (req, res) => {
   });
 };
 
+const deletePost = async (req, res) => {
+  const postId = req.params.post_id;
+
+  const result = await postService.deletePost(postId);
+
+  return res.json({
+    success: 1
+  });
+}
+
 const createComment = async (req, res) => {
   const body = req.body;
   await postService.createComment(body);
@@ -129,7 +138,6 @@ const getImageList = async (req, res, err) => {
 
   const postId = req.params.post_id;
   const result = await b2.getFileList('post', postId);
-
   return res.status(200).json({
     payload: result
   });
@@ -160,6 +168,7 @@ const postController = {
   getPostDetail,
   getPostsByCategory,
   createPost,
+  deletePost,
   createComment,
   createRecomment,
   uploadImages,

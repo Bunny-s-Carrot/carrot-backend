@@ -1,9 +1,9 @@
 const multer = require('multer');
 const userService = require('../user/userService');
 const productService = require('./productService');
-const heartService = require('../heart/heartService');
 const b2 = require("../../utils/backBlaze/b2");
 const { convertToJPG } = require('../../utils/file/extension');
+const chatService = require('../chat/chatService');
 
 
 const getProducts = async (req, res) => {
@@ -20,7 +20,8 @@ const getProductDetail = async (req, res) => {
   const productId = req.params.product_id;
   const productInfo = await productService.getProductById(productId);
   const sellerInfo = await userService.getUserById(productInfo?.seller_id);
-  const result = { seller: sellerInfo, product: productInfo };
+  const chatInfo = await chatService.getChatRoomId(parseInt(productId), productInfo?.seller_id);
+  const result = { seller: sellerInfo, product: productInfo, chat: chatInfo };
 
   if (!productInfo) {
     return res.status(404).json({
