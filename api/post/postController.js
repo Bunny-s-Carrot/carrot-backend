@@ -74,6 +74,16 @@ const createPost = async (req, res) => {
   });
 };
 
+const deletePost = async (req, res) => {
+  const postId = req.params.post_id;
+
+  const result = await postService.deletePost(postId);
+
+  return res.json({
+    success: 1
+  });
+}
+
 const createComment = async (req, res) => {
   const body = req.body;
   await postService.createComment(body);
@@ -158,6 +168,7 @@ const postController = {
   getPostDetail,
   getPostsByCategory,
   createPost,
+  deletePost,
   createComment,
   createRecomment,
   uploadImages,
