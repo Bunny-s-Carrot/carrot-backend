@@ -88,12 +88,25 @@ const updateHeart = async (product_id, plus) => {
   }
 }
 
+const updateChat = async (product_id) => {
+  try {
+    const result = pool.query(
+      `update PRODUCT set chat = chat + 1 where product_id = ${product_id}`
+    );
+
+    return result[0];
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
 const productService = {
   getProducts,
   getProductById,
   createProduct,
   deleteProduct,
   updateHeart,
+  updateChat,
 }
 
 module.exports = productService;
