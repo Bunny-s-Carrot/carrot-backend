@@ -20,8 +20,7 @@ const getProductDetail = async (req, res) => {
   const productId = req.params.product_id;
   const productInfo = await productService.getProductById(productId);
   const sellerInfo = await userService.getUserById(productInfo?.seller_id);
-  const chatInfo = await chatService.getChatRoomId(parseInt(productId), productInfo?.seller_id);
-  const result = { seller: sellerInfo, product: productInfo, chat: chatInfo };
+  const result = { seller: sellerInfo, product: productInfo };
 
   if (!productInfo) {
     return res.status(404).json({

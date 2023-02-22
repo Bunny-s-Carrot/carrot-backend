@@ -1,5 +1,6 @@
 const pool = require("../../config/mysql");
 const Message = require('../../schemas');
+const productService = require("../product/productService");
 
 const createChatRoom = async (data) => {
   try {
@@ -13,6 +14,7 @@ const createChatRoom = async (data) => {
         data.product_id,
       ]
     )
+    await productService.updateChat(data.product_id)
     
     return result[0];
   } catch (e) {
@@ -42,7 +44,7 @@ const getChatRoomId = async (product_id, seller_id) => {
       ]
     );
 
-    return data[0][0];
+    return data[0];
   } catch (e) {
     throw Error(e);
   }
@@ -60,11 +62,18 @@ const getChatRoomById = async (chatRoom_id) => {
   }
 }
 
-const getChatRoomByUserId = async (user_id) => {
+const getChatRoomByUserId = async (user_id, product_id='') => {
   try {
-    const data = await pool.query(
-      `select * from CHATROOM where buyer_id = ${user_id} or seller_id = ${user_id}`
-    );
+    let data;
+    if (product_id) {
+      data = await pool.query(
+        `select * from CHATROOM where product_id=${product_id} and (buyer_id = ${user_id} or seller_id = ${user_id})`
+      );
+    } else {
+      data = await pool.query(
+        `select * from CHATROOM where buyer_id = ${user_id} or seller_id = ${user_id}`
+      )
+    }
 
     for (let value of data[0]) {
       let search_id;
@@ -73,7 +82,7 @@ const getChatRoomByUserId = async (user_id) => {
       } else {
         search_id = value.seller_id;
       }
-      
+
       const getmysql = await pool.query(`select name, addr_name from USER 
         join LOCATION where user_id = ${search_id} and location = location_id`);
       value.displayName = getmysql[0][0].name;
