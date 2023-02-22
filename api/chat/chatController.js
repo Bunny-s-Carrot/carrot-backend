@@ -31,8 +31,8 @@ const getChatRoomByUuid = async (req, res) => {
 
 const getChatRoomByUserId = async (req, res) => {
   const user_id = req.params.user_id;
-  const data = await chatService.getChatRoomByUserId(user_id);
-  // const sellerInfo = await 
+  const product_id = req.query.product_id;
+  const data = await chatService.getChatRoomByUserId(user_id, product_id);
 
   return res.status(200).json({
     payload: data
