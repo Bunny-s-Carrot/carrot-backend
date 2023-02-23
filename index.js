@@ -25,7 +25,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:3000', 'app.bunnyscarrot.com']
+    origin: ['http://localhost:3000', 'https://app.bunnyscarrot.com']
   }
 });
 
@@ -45,7 +45,6 @@ io.on('connection', socket => {
   socket.on(`send-message`, ({ message, userId, uuid, createdAt }) => {
     let skt = socket.broadcast;
     skt = uuid ? skt.to(uuid) : skt;
-    console.log(createdAt);
     skt.emit(`receive-message`, { message, userId, createdAt });
   })
 })
