@@ -4,7 +4,7 @@
 ### 1. 개요  
 
 당근마켓의 클론코딩 백엔드 서버 코드입니다. 개인 포트폴리오용으로 작성되었습니다.  
-<br />  
+ 
 **웹: [🔗웹사이트](https://app.bunnyscarrot.com 'https://app.bunnyscarrot.com')**  
 **Android: [🔗APK 다운로드](https://drive.google.com/file/d/1GlTDVVdqjyq5__q2r-og7riKn7pKZDKO/view?usp=share_link 'https://drive.google.com/file/d/1GlTDVVdqjyq5__q2r-og7riKn7pKZDKO/view?usp=share_link')**  
 **IOS: N/A**  
